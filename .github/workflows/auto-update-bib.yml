@@ -51,13 +51,13 @@ jobs:
           fi
 
       - name: Configure Git user
-        # if: steps.check_changes.outputs.changes == 'true'
+        if: steps.check_changes.outputs.changes == 'true'
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
       - name: Commit and push updated papers.bib
-        # if: steps.check_changes.outputs.changes == 'true'
+        if: steps.check_changes.outputs.changes == 'true'
         run: |
           git add _bibliography/papers.bib
           git commit -m "chore: auto-update papers.bib $(date +'%Y-%m-%d %H:%M:%S')"
