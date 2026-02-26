@@ -21,7 +21,7 @@ TARGET_ORCID_IDS = [
 OUTPUT_FILE = "./_bibliography/papers.bib"
 
 # 4. 每个ORCID ID的抓取数量限制 (0表示无限制)
-LIMIT_PER_ORCID = 5
+LIMIT_PER_ORCID = 3
 
 # 5. 请求超时设置（秒）
 TIMEOUT = 15
