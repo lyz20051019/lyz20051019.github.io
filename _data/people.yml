@@ -1,0 +1,43 @@
+# _data/people.yml 正确格式（必须用空格缩进，不能用Tab）
+supervisor:
+  - id: hongxin
+    name: 洪鑫
+    en_name: Hong Xin
+    position: 副教授、博士生导师
+    en_position: Associate Professor, PhD Supervisor
+    image: hongxin.png  # 对应assets/img/people/hongxin.png
+    category: supervisor
+
+current_members:
+  - id: zhangsan
+    name: 张三
+    en_name: John Doe
+    position: 博士研究生
+    en_position: PhD Student
+    category: current_team_members
+    research_interests: 机器学习、计算机视觉
+    en_research_interests: Machine Learning, Computer Vision
+    email: zhangsan@example.com
+
+  - id: lisi
+    name: 李四
+    en_name: Jane Smith
+    position: 硕士研究生
+    en_position: Master Student
+    category: current_team_members
+    research_interests: 自然语言处理
+    en_research_interests: Natural Language Processing
+    email: lisi@example.com
+
+past_members:
+  - id: wangwu
+    name: 王五
+    en_name: Mike Johnson
+    position: 前博士研究生
+    en_position: Former PhD Student
+    category: past_team_members
+    research_interests: 数据挖掘
+    en_research_interests: Data Mining
+    current_position: 腾讯高级工程师
+    en_current_position: Senior Engineer at Tencent
+    graduation_year: 2023

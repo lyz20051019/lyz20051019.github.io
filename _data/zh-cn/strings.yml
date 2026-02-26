@@ -1,0 +1,180 @@
+archive:
+  prefix: 存档
+  category_suffix: 在此分类中
+  tag_suffix: 带此标签
+  year_suffix: 本年度
+bibliography:
+  abstract: 摘要
+  awarded: 获奖
+  blog: 博客
+  book_prefix: 收录于
+  code: 代码
+  last_author_prefix: 及
+  poster: 海报
+  slides: 幻灯片
+  supp: 补充材料
+  video: 视频
+  website: 网站
+blog:
+  navigation_title: 博客
+categories:
+  fun: 休闲
+  work: 工作
+citation:
+  bibtex: "或作为BibTeX条目："
+  introduction: "如果您觉得有用，请这样引用："
+collections:
+  books: 书籍
+  posts: 文章
+contact_note: 您甚至可以添加一点关于哪种方式最适合联系您的说明。
+cv:
+  address: 地址
+  area: 领域
+  awarder: 颁奖机构
+  awards: 获奖经历
+  basics: 基本信息
+  certificates: 证书
+  city: 城市
+  countryCode: 国家代码
+  courses: 课程
+  date: 日期
+  education: 教育经历
+  email: 邮箱
+  endDate: 结束日期
+  fluency: 熟练程度
+  highlights: 亮点
+  image: 图片
+  institution: 机构
+  interests: 研究兴趣
+  issuer: 颁发者
+  keywords: 关键词
+  label: 标签
+  language: 语言
+  languages: 语言能力
+  level: 水平
+  location: 地点
+  name: 姓名
+  network: 社交网络
+  organization: 组织
+  phone: 电话
+  position: 职位
+  postalCode: 邮政编码
+  present: 至今
+  profiles: 个人主页
+  projects: 项目经历
+  publications: 学术成果
+  publisher: 出版商
+  reference: 推荐人
+  references: 推荐人信息
+  region: 地区
+  releaseDate: 发布日期
+  score: 成绩
+  skills: 技能
+  startDate: 开始日期
+  studyType: 学历类型
+  summary: 简介
+  table_of_contents: 目录
+  title: 标题
+  url: 链接
+  username: 用户名
+  volunteer: 志愿经历
+  work: 工作经历
+footer:
+  copyright: 版权所有
+  last_updated: "最后更新："
+footer_text: > # ">"符号表示忽略换行，直到"titles:"
+  由<a href="https://jekyllrb.com/" target="_blank">Jekyll</a>驱动，采用<a href="https://github.com/george-gca/multi-language-al-folio">多语言al-folio</a>主题。
+  托管于<a href="https://pages.github.com/" target="_blank">GitHub Pages</a>。
+  图片来自<a href="https://unsplash.com" target="_blank">Unsplash</a>。
+latest_posts: 最新文章
+months:
+  long:
+    january: January
+    february: February
+    march: March
+    april: April
+    may: May
+    june: June
+    july: July
+    august: August
+    september: September
+    october: October
+    november: November
+    december: December
+  short:
+    january: Jan
+    february: Feb
+    march: Mar
+    april: Apr
+    may: May
+    june: Jun
+    july: Jul
+    august: Aug
+    september: Sep
+    october: Oct
+    november: Nov
+    december: Dec
+news: 动态
+newsletter:
+  back: 返回
+  error: "抱歉！出错了，请重试。"
+  subscribe: 订阅
+  subscribed: "您已成功订阅通讯。"
+  subscribe_to_receive: "订阅以获取最新文章通知："
+  too_many_signups: "订阅请求过多，请稍后再试"
+  wait: "请稍候..."
+no_news: 暂无动态...
+no_posts: "暂无文章..."
+pagination:
+  page: 页
+post:
+  created_in: 发布于
+  created_by: 作者
+  last_updated: 最后更新于
+references: 参考文献
+related_posts:
+  description: "以下是您可能还想阅读的其他文章："
+  title: 喜欢这篇文章？
+search:
+  dark_theme:
+    description: 将网站主题切换为深色
+    title: 切换至深色主题
+  dropdown: 下拉菜单
+  email: 发送邮件
+  footer:
+    close: 关闭
+    navigate: 导航
+    parent: 返回上级
+    select: 选择
+  languages: 语言
+  light_theme:
+    description: 将网站主题切换为浅色
+    title: 切换至浅色主题
+  navigation: 导航菜单
+  news: 动态
+  posts: 文章
+  projects: 项目
+  socials: 社交账号
+  system_theme:
+    description: 将网站主题切换为系统默认
+    title: 使用系统默认主题
+  theme: 主题
+selected_publications: 精选成果
+site_description: 一款简洁、留白风格的学术网站主题。基于[*folio](https://github.com/bogoli/-folio)设计。
+nav:
+  about: "关于（当前）"
+  publications: "成果"
+  projects: "项目"
+  repositories: "代码库"
+  cv: "简历"
+  teaching: "教学"
+  people: "团队成员"
+  submenus: "子菜单"
+
+team:
+  team_members: "团队成员"
+  supervisor: "导师"
+  current_members: "现有组员"
+  past_members: "往届组员"
+  team_research_interests: "研究方向"
+  team_current_position: "当前职位"

@@ -1,0 +1,46 @@
+name: Update Google Scholar Publications
+
+on:
+  schedule:
+    # 每天 UTC 时间 0点 运行 (北京时间早上8点)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 允许手动触发
+  push:
+    branches: [main] # 新增：向 main 分支 push 时自动触发本工作流
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    # 新增：设置工作流优先级（若需确保先运行，可结合 concurrency 或让其他工作流依赖此 job）
+    concurrency:
+      group: publication-update-${{ github.ref }}
+      cancel-in-progress: false # 避免并发执行时互相干扰
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install scholarly pyyaml requests fake_useragent
+
+      - name: Run update script
+        run: python scripts/update_publications.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "action@github.com"
+          git add -A
+          # 只有当文件有变动时才 commit
+          git diff-index --quiet HEAD || (git commit -m "Automated publication update" && git push)

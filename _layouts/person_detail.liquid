@@ -1,0 +1,93 @@
+﻿---
+layout: default
+---
+
+<div class="container mt-8 mb-12">
+  <div class="row">
+    <!-- 左侧：头像 + yml核心信息（名字/职位/研究方向/邮箱） -->
+    <div class="col-md-4 text-center">
+      {% comment %} 修复图片判断逻辑：和team.liquid保持一致 {% endcomment %}
+      {% assign img_filename = page.id | append: ".png" %}
+      {% assign img_relative_path = "/assets/img/people/" | append: img_filename %}
+      {% assign default_img_path = "/assets/img/people/default.png" | relative_url %}
+      
+      {% assign target_img = site.static_files | where_exp: "file", "file.path == img_relative_path" | first %}
+      {% if target_img %}
+        {% assign img_path = img_relative_path | relative_url %}
+      {% else %}
+        {% assign img_path = default_img_path %}
+      {% endif %}
+
+      <img 
+        src="{{ img_path }}" 
+        alt="{{ site.data.people.supervisor | where: 'id', page.id | map: 'name' | first | default: site.data.people.supervisor | where: 'id', page.id | map: 'en_name' | first }}"
+        class="rounded-circle mb-3"
+        style="width: 220px; height: 220px; object-fit: cover; border: 3px solid #f8f9fa;"
+      >
+
+      {% comment %} 以下逻辑不变，省略（和上一版一致） {% endcomment %}
+      {% assign person = nil %}
+      {% assign supervisor = site.data.people.supervisor | where: "id", page.id | first %}
+      {% if supervisor %}
+        {% assign person = supervisor %}
+      {% else %}
+        {% assign current_member = site.data.people.current_members | where: "id", page.id | first %}
+        {% if current_member %}
+          {% assign person = current_member %}
+        {% else %}
+          {% assign past_member = site.data.people.past_members | where: "id", page.id | first %}
+          {% if past_member %}
+            {% assign person = past_member %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+
+      {% if person %}
+        {% if site.active_lang == "zh-cn" %}
+          <h2 class="fw-bold mb-1">{{ person.name }}</h2>
+        {% else %}
+          <h2 class="fw-bold mb-1">{{ person.en_name }}</h2>
+        {% endif %}
+
+        {% if site.active_lang == "zh-cn" %}
+          <h4 class="text-muted h6 mb-2">{{ person.position }}</h4>
+        {% else %}
+          <h4 class="text-muted h6 mb-2">{{ person.en_position }}</h4>
+        {% endif %}
+
+        {% if site.active_lang == "zh-cn" and person.research_interests %}
+          <div class="mb-3 text-start px-4">
+            <span class="d-block text-sm text-secondary fw-semibold mb-1">研究方向:</span>
+            <span class="text-wrap">{{ person.research_interests }}</span>
+          </div>
+        {% elsif site.active_lang != "zh-cn" and person.en_research_interests %}
+          <div class="mb-3 text-start px-4">
+            <span class="d-block text-sm text-secondary fw-semibold mb-1">Research Interests:</span>
+            <span class="text-wrap">{{ person.en_research_interests }}</span>
+          </div>
+        {% endif %}
+
+        {% if person.email and person.email != "" %}
+          <div class="mb-4 text-start px-4">
+            <span class="d-block text-sm text-secondary fw-semibold mb-1">
+              {% if site.active_lang == "zh-cn" %}邮箱{% else %}Email{% endif %}:
+            </span>
+            <span class="text-wrap">{{ person.email | split: "@" | join: "&#64;" | replace: ".", "&#46;" }}</span>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <!-- 右侧：仅显示md文件中的正文简介 -->
+    <div class="col-md-8">
+      {% if content %}
+        <div class="mt-2 p-4 border rounded">
+          <h3 class="h5 mb-3 text-primary">{% if site.active_lang == "zh-cn" %}个人简介{% else %}Biography{% endif %}</h3>
+          <div class="prose prose-lg text-body-secondary">
+            {{ content }}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
