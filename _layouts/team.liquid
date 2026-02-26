@@ -53,7 +53,7 @@ layout: default
           {% assign default_img_path = "/assets/img/people/default.png" | relative_url %}
           
           {% comment %} 修复判断逻辑：用where_exp精准匹配静态文件路径 {% endcomment %}
-          {% assign target_img = site.static_files | where_exp: "file", "file.path == img_relative_path" | first %}
+          {% assign target_img = site.static_files | where_exp: "file", "file.name == img_filename" | first %}
           {% if target_img %}
             {% assign img_path = img_relative_path | relative_url %}
           {% else %}
