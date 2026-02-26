@@ -32,6 +32,9 @@ jobs:
       - name: Run ORCID BibTeX update script
         run: python scripts/auto-update.py
         continue-on-error: false
+        env:
+          ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+          ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
 
       - name: Check for changes in papers.bib
         id: check_changes
