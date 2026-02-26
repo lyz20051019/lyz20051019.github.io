@@ -3,25 +3,18 @@ layout: default
 ---
 
 {% comment %} 1. 核心配置：使用网站默认的语言设置 {% endcomment %}
-{% assign is_default_lang = (site.active_lang == site.default_lang) %}  <!-- 英文无前缀，中文有/zh-cn/前缀 -->
-
-{% comment %} 2. 分类配置：对应 _data/people.yml 的顶级key {% endcomment %}
+{% assign is_default_lang = (site.active_lang == site.default_lang) %}  {% comment %} 2. 分类配置：对应 _data/people.yml 的顶级key {% endcomment %}
 {% assign team_categories = "supervisor,current_members,past_members" | split: "," %}
 {% assign category_titles = "导师,现有组员,往届组员" | split: "," %}
 {% assign category_en_titles = "Supervisor,Current Members,Past Members" | split: "," %}
 
 <div class="container mt-5 mb-8">
-  <!-- 页面标题：默认英文，中文切换 -->
   <h1 class="text-center mb-7">{{ page.title | default: site.data[site.active_lang].strings.team_members }}</h1>
   
   {% comment %} 3. 循环渲染每个分类 {% endcomment %}
   {% for i in (0..2) %}
     {% assign category_key = team_categories[i] %}
-    {% assign members = site.data.people[category_key] %} <!-- 读取根目录双语数据 -->
-    
-    <!-- 添加存在性检查 -->
-    {% if members and members.size > 0 %}
-      <!-- 分类标题：默认英文，中文切换 -->
+    {% assign members = site.data.people[category_key] %} {% if members and members.size > 0 %}
       <h2 class="text-center mb-5 fw-bold">
         {% if site.active_lang == "zh-cn" %}
           {{ category_titles[i] }}
@@ -30,37 +23,24 @@ layout: default
         {% endif %}
       </h2>
 
-      <!-- 4. 响应式卡片网格 -->
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-5 mb-10">
         {% for person in members %}
           {% comment %} 5. 双语字段切换：根据当前语言显示对应的字段 {% endcomment %}
-          {% if site.active_lang == "zh-cn" %}  <!-- 中文时使用中文字段 -->
-            {% assign person_name = person.name | default: person.en_name %}
+          {% if site.active_lang == "zh-cn" %}  {% assign person_name = person.name | default: person.en_name %}
             {% assign person_position = person.position | default: person.en_position %}
             {% assign person_research = person.research_interests | default: person.en_research_interests %}
             {% assign person_current_pos = person.current_position | default: person.en_current_position %}
-          {% else %}  <!-- 英文时使用英文字段 -->
-            {% assign person_name = person.en_name | default: person.name %}
+          {% else %}  {% assign person_name = person.en_name | default: person.name %}
             {% assign person_position = person.en_position | default: person.position %}
             {% assign person_research = person.en_research_interests | default: person.research_interests %}
             {% assign person_current_pos = person.en_current_position | default: person.current_position %}
           {% endif %}
 
-          {% comment %} 6. 图片处理：修复判断逻辑，确保有自定义图用自定义图，无则用默认图 {% endcomment %}
+          {% comment %} 6. 图片处理：精简逻辑，直接生成目标路径，把判断交给前端 {% endcomment %}
           {% assign img_filename = person.id | append: ".png" %}
-          {% assign img_relative_path = "/assets/img/people/" | append: img_filename %}
-          {% assign img_absolute_path = img_relative_path | absolute_url %}
+          {% assign img_path = "/assets/img/people/" | append: img_filename | relative_url %}
           {% assign default_img_path = "/assets/img/people/default.png" | relative_url %}
-          
-          {% comment %} 修复判断逻辑：用where_exp精准匹配静态文件路径 {% endcomment %}
-          {% assign target_img = site.static_files | where_exp: "file", "file.name == img_filename" | first %}
-          {% if target_img %}
-            {% assign img_path = img_relative_path | relative_url %}
-          {% else %}
-            {% assign img_path = default_img_path %}
-          {% endif %}
 
-          <!-- 7. 成员卡片+跳转路径（适配默认英文、中文前缀） -->
           <div class="col">
             <div class="card h-100 border-0 shadow-sm rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
               <a href="{% if is_default_lang %}{{ "/people/" | append: person.id | append: "/" | relative_url }}{% else %}{{ "/" | append: site.active_lang | append: "/people/" | append: person.id | append: "/" | relative_url }}{% endif %}"
@@ -71,6 +51,7 @@ layout: default
                   <div class="mb-4 d-flex justify-content-center">
                     <img 
                       src="{{ img_path }}" 
+                      onerror="this.onerror=null; this.src='{{ default_img_path }}';"
                       alt="{{ person_name }}" 
                       class="rounded-circle"
                       style="width: 160px; height: 160px; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);"
@@ -80,7 +61,6 @@ layout: default
                   <h5 class="card-title mb-2 font-weight-bold">{{ person_name }}</h5>
                   <p class="card-text text-muted mb-3">{{ person_position }}</p>
                   
-                  <!-- 研究方向（可选） -->
                   {% if person_research %}
                     <div class="mt-3 p-3 bg-light rounded">
                       <p class="card-text text-sm mb-0">
@@ -89,7 +69,6 @@ layout: default
                     </div>
                   {% endif %}
                   
-                  <!-- 往届成员当前职位（可选） -->
                   {% if person_current_pos and category_key == "past_members" %}
                     <div class="mt-3 text-sm text-gray-600">
                       <strong>{{ site.data[site.active_lang].strings.team.team_current_position }}:</strong> {{ person_current_pos }}
