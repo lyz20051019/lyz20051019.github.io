@@ -3,138 +3,52 @@ layout: page
 ---
 <div class="post">
   <article>
-    {% comment %} 1. 核心配置：明确语言前缀、分类、多语言标题 {% endcomment %}
-    {% assign default_lang = site.default_lang | default: "en" %}
-    {% assign active_lang = site.active_lang | default: default_lang %}
-    {% assign is_default_lang = (active_lang == default_lang) %}
-    
-    {% comment %} 语言前缀：默认语言无前缀，中文（zh-cn）加前缀 {% endcomment %}
-    {% if is_default_lang %}
-      {% assign lang_prefix = "" %}
-    {% else %}
-      {% assign lang_prefix = "/" | append: active_lang %}
-    {% endif %}
-
-    {% assign team_categories = "supervisor,current_members,past_members" | split: "," %}
-    {% assign category_titles = "导师,现有组员,往届组员" | split: "," %}
-    {% assign category_en_titles = "Supervisor,Current Members,Past Members" | split: "," %}
-
-    {% comment %} 2. 循环渲染每个分类 {% endcomment %}
-    {% for i in (0..2) %}
-      {% assign category_key = team_categories[i] %}
-      {% assign members = site.data.people[category_key] %}
-      
-      {% if members and members.size > 0 %}
-        <h2 class="text-center mb-5 fw-bold">
-          {% if active_lang == "zh-cn" %}
-            {{ category_titles[i] }}
-          {% else %}
-            {{ category_en_titles[i] }}
-          {% endif %}
-        </h2>
-
-        {% comment %} 3. 循环每个人员 {% endcomment %}
-        {% for person in members %}
-          <hr>
-          {% comment %} 人员对齐方式（默认right） {% endcomment %}
-          {% assign profile_align = person.align | default: "right" %}
-          
-          {% comment %} 修复：图片路径（兼容语言前缀，避免relative_url导致的路径错误） {% endcomment %}
-          {% assign img_filename = person.id | append: ".png" %}
-          {% comment %} 手动拼接绝对路径：适配中英文前缀 {% endcomment %}
-          {% assign profile_image_path = lang_prefix | append: "/assets/img/people/" | append: img_filename %}
-          {% assign default_img_path = lang_prefix | append: "/assets/img/people/default.png" %}
-
-          {% comment %} 图片样式：保留圆形/方形逻辑 {% endcomment %}
-          {% if person.image_circular %}
-            {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
-            {% assign img_style = "width: 160px; height: 160px; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);" %}
-          {% else %}
-            {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
-            {% assign img_style = "object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);" %}
-          {% endif %}
-
-          {% comment %} 多语言字段适配 {% endcomment %}
-          {% if active_lang == "zh-cn" %}
-            {% assign person_name = person.name | default: person.en_name %}
-            {% assign person_position = person.position | default: person.en_position %}
-            {% assign person_research = person.research_interests | default: person.en_research_interests %}
-            {% assign person_current_pos = person.current_position | default: person.en_current_position %}
-          {% else %}
-            {% assign person_name = person.en_name | default: person.name %}
-            {% assign person_position = person.en_position | default: person.position %}
-            {% assign person_research = person.en_research_interests | default: person.research_interests %}
-            {% assign person_current_pos = person.en_current_position | default: person.current_position %}
-          {% endif %}
-
-          {% comment %} 人员卡片布局 {% endcomment %}
-          <div class="profile float-{% if profile_align == 'left' %}left{% else %}right{% endif %}">
-            <img 
-              src="{{ profile_image_path | absolute_url }}"  {% comment %} 转为绝对URL，确保跨语言路径正确 {% endcomment %}
-              onerror="this.onerror=null; this.src='{{ default_img_path | absolute_url }}';"
-              alt="{{ person_name }}" 
-              class="{{ profile_image_class }}" 
-              sizes="(min-width: {{ site.max_width }}) {{ site.max_width | minus: 30 | times: 0.3}}px, (min-width: 576px) 30vw, 95vw"
-              style="{{ img_style }}"
-              loading="lazy"
-            >
-            {% comment %} 人员职位/附加信息 {% endcomment %}
-            {% if person.more_info %}
-              <div class="more-info">{{ person.more_info }}</div>
-            {% elsif person_position %}
-              <div class="more-info">{{ person_position }}</div>
+    {% if page.profiles %}
+      {% for profile in page.profiles %}
+        <hr>
+        <div class="profile float-{% if profile.align == 'left' %}left{% else %}right{% endif %}">
+          {% if profile.image %}
+            {% comment %} 1. 图片路径配置：保留原有路径逻辑，新增默认图片路径 {% endcomment %}
+            {% assign profile_image_path = profile.image | prepend: 'assets/img/' | relative_url %}
+            {% assign default_img_path = "/assets/img/people/default.png" | relative_url %}
+            
+            {% comment %} 2. 图片样式类：保留圆形/方形区分，新增第一段的样式优化 {% endcomment %}
+            {% if profile.image_circular %}
+              {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
+              {% assign img_style = "width: 160px; height: 160px; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);" %}
+            {% else %}
+              {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
+              {% assign img_style = "object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);" %}
             {% endif %}
-          </div>
+            
+            {% comment %} 3. 图片尺寸配置：保留原有sizes逻辑 {% endcomment %}
+            {% capture sizes %}(min-width: {{ site.max_width }}) {{ site.max_width | minus: 30 | times: 0.3}}px, (min-width: 576px) 30vw, 95vw"{% endcapture %}
+            
+            {% comment %} 4. 核心修改：替换figure include为直接img标签，加入onerror和lazy加载 {% endcomment %}
+            <img 
+              src="{{ profile_image_path }}" 
+              onerror="this.onerror=null; this.src='{{ default_img_path }}';"  <!-- 加载失败替换默认图 -->
+              alt="{{ profile.image }}" 
+              class="{{ profile_image_class }}" 
+              sizes={{ sizes }}
+              style="{{ img_style }}"  <!-- 新增样式优化 -->
+              loading="lazy"  <!-- 懒加载，替换原有eager -->
+            >
+          {% endif %}
+          {% if profile.more_info %}
+            <div class="more-info">{{ profile.more_info }}</div>
+          {% endif %}
+        </div>
 
-          <div class="clearfix">
-            <div class="card-body text-center p-3">
-              <h5 class="card-title mb-2 font-weight-bold">{{ person_name }}</h5>
-              
-              {% if person_research %}
-                <div class="mt-2 p-2 bg-light rounded">
-                  <p class="card-text text-sm mb-0">
-                    <strong>{{ site.data[active_lang].strings.team.team_research_interests | default: "Research Interests" }}:</strong> {{ person_research }}
-                  </p>
-                </div>
-              {% endif %}
-              
-              {% if person_current_pos and category_key == "past_members" %}
-                <div class="mt-2 text-sm text-gray-600">
-                  <strong>{{ site.data[active_lang].strings.team.team_current_position | default: "Current Position" }}:</strong> {{ person_current_pos }}
-                </div>
-              {% endif %}
-
-              {% comment %} 修复：人员详情链接（统一语言前缀逻辑） {% endcomment %}
-              {% assign person_detail_path = lang_prefix | append: "/people/" | append: person.id | append: "/" %}
-              <a href="{{ person_detail_path | absolute_url }}"
-                 class="mt-2 d-inline-block text-decoration-none">
-                {{ site.data[active_lang].strings.team.view_more | default: "View More" }}
-              </a>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endfor %}
+        <div class="clearfix">
+          {% if profile.content %}
+            {% capture profile_content %}{% include_relative {{ profile.content }} %}{% endcapture %}
+            {{ profile_content | markdownify }}
+          {% else %}
+            {{ content }}
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% endif %}
   </article>
 </div>
-
-<style>
-  /* 基础样式修复 */
-  .transition-all { transition-property: all; }
-  .duration-300 { transition-duration: 0.3s; }
-  .hover-shadow-xl:hover { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); }
-  .hover-translate-up:hover { transform: translateY(-2px); }
-  .g-5 { gap: 3rem; }
-  .card-title { font-size: 1.1rem; }
-  .card-body.text-center {
-    text-align: center !important;
-  }
-  /* 浮动布局样式 */
-  .profile.float-left { float: left; margin-right: 2rem; margin-bottom: 1rem; }
-  .profile.float-right { float: right; margin-left: 2rem; margin-bottom: 1rem; }
-  .clearfix::after { content: ""; clear: both; display: table; }
-  /* 响应式适配 */
-  @media (max-width: 768px) {
-    .profile { float: none !important; margin: 0 auto !important; display: block; text-align: center; }
-  }
-</style>
