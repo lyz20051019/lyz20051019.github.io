@@ -3,52 +3,127 @@ layout: page
 ---
 <div class="post">
   <article>
-    {% if page.profiles %}
-      {% for profile in page.profiles %}
-        <hr>
-        <div class="profile float-{% if profile.align == 'left' %}left{% else %}right{% endif %}">
-          {% if profile.image %}
-            {% comment %} 1. 图片路径配置：保留原有路径逻辑，新增默认图片路径 {% endcomment %}
-            {% assign profile_image_path = profile.image | prepend: 'assets/img/' | relative_url %}
-            {% assign default_img_path = "/assets/img/people/default.png" | relative_url %}
-            
-            {% comment %} 2. 图片样式类：保留圆形/方形区分，新增第一段的样式优化 {% endcomment %}
-            {% if profile.image_circular %}
-              {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
-              {% assign img_style = "width: 160px; height: 160px; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);" %}
-            {% else %}
-              {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
-              {% assign img_style = "object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);" %}
-            {% endif %}
-            
-            {% comment %} 3. 图片尺寸配置：保留原有sizes逻辑 {% endcomment %}
-            {% capture sizes %}(min-width: {{ site.max_width }}) {{ site.max_width | minus: 30 | times: 0.3}}px, (min-width: 576px) 30vw, 95vw"{% endcapture %}
-            
-            {% comment %} 4. 核心修改：替换figure include为直接img标签，加入onerror和lazy加载 {% endcomment %}
+    {% comment %} 1. 复用第二段代码的核心配置：分类、多语言、数据源 {% endcomment %}
+    {% assign is_default_lang = (site.active_lang == site.default_lang) %}
+    {% assign team_categories = "supervisor,current_members,past_members" | split: "," %}
+    {% assign category_titles = "导师,现有组员,往届组员" | split: "," %}
+    {% assign category_en_titles = "Supervisor,Current Members,Past Members" | split: "," %}
+
+    {% comment %} 2. 循环渲染每个分类（替代原有的 page.profiles 循环） {% endcomment %}
+    {% for i in (0..2) %}
+      {% assign category_key = team_categories[i] %}
+      {% assign members = site.data.people[category_key] %}
+      
+      {% if members and members.size > 0 %}
+        <h2 class="text-center mb-5 fw-bold">
+          {% if site.active_lang == "zh-cn" %}
+            {{ category_titles[i] }}
+          {% else %}
+            {{ category_en_titles[i] }}
+          {% endif %}
+        </h2>
+
+        {% comment %} 3. 循环每个人员（替代原有的 profile 循环） {% endcomment %}
+        {% for person in members %}
+          <hr>
+          {% comment %} 4. 适配人员字段：对齐方式（默认right）、图片路径、多语言名称/职位 {% endcomment %}
+          {% assign profile_align = person.align | default: "right" %}
+          
+          {% comment %} 图片路径：和第二段代码一致，用person.id拼接，默认png {% endcomment %}
+          {% assign img_filename = person.id | append: ".png" %}
+          {% assign profile_image_path = "/assets/img/people/" | append: img_filename | relative_url %}
+          {% assign default_img_path = "/assets/img/people/default.png" | relative_url %}
+
+          {% comment %} 图片样式：保留原代码的圆形/方形逻辑（person.image_circular 控制） {% endcomment %}
+          {% if person.image_circular %}
+            {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
+            {% assign img_style = "width: 160px; height: 160px; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);" %}
+          {% else %}
+            {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
+            {% assign img_style = "object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);" %}
+          {% endif %}
+
+          {% comment %} 多语言字段适配：和第二段代码一致 {% endcomment %}
+          {% if site.active_lang == "zh-cn" %}
+            {% assign person_name = person.name | default: person.en_name %}
+            {% assign person_position = person.position | default: person.en_position %}
+            {% assign person_research = person.research_interests | default: person.en_research_interests %}
+            {% assign person_current_pos = person.current_position | default: person.en_current_position %}
+          {% else %}
+            {% assign person_name = person.en_name | default: person.name %}
+            {% assign person_position = person.en_position | default: person.position %}
+            {% assign person_research = person.en_research_interests | default: person.research_interests %}
+            {% assign person_current_pos = person.en_current_position | default: person.current_position %}
+          {% endif %}
+
+          {% comment %} 5. 保留原代码的布局结构，替换为person数据 {% endcomment %}
+          <div class="profile float-{% if profile_align == 'left' %}left{% else %}right{% endif %}">
+            {% comment %} 图片标签：沿用原代码的onerror、lazy加载，替换为新的图片路径 {% endcomment %}
             <img 
               src="{{ profile_image_path }}" 
-              onerror="this.onerror=null; this.src='{{ default_img_path }}';"  <!-- 加载失败替换默认图 -->
-              alt="{{ profile.image }}" 
+              onerror="this.onerror=null; this.src='{{ default_img_path }}';"
+              alt="{{ person_name }}" 
               class="{{ profile_image_class }}" 
-              sizes={{ sizes }}
-              style="{{ img_style }}"  <!-- 新增样式优化 -->
-              loading="lazy"  <!-- 懒加载，替换原有eager -->
+              sizes="(min-width: {{ site.max_width }}) {{ site.max_width | minus: 30 | times: 0.3}}px, (min-width: 576px) 30vw, 95vw"
+              style="{{ img_style }}"
+              loading="lazy"
             >
-          {% endif %}
-          {% if profile.more_info %}
-            <div class="more-info">{{ profile.more_info }}</div>
-          {% endif %}
-        </div>
+            {% comment %} 人员附加信息：more_info 兼容，或显示职位 {% endcomment %}
+            {% if person.more_info %}
+              <div class="more-info">{{ person.more_info }}</div>
+            {% elsif person_position %}
+              <div class="more-info">{{ person_position }}</div>
+            {% endif %}
+          </div>
 
-        <div class="clearfix">
-          {% if profile.content %}
-            {% capture profile_content %}{% include_relative {{ profile.content }} %}{% endcapture %}
-            {{ profile_content | markdownify }}
-          {% else %}
-            {{ content }}
-          {% endif %}
-        </div>
-      {% endfor %}
-    {% endif %}
+          <div class="clearfix">
+            {% comment %} 6. 人员内容：优先显示research_interests，或个人页面链接，或默认内容 {% endcomment %}
+            <div class="card-body text-center p-3">
+              <h5 class="card-title mb-2 font-weight-bold">{{ person_name }}</h5>
+              
+              {% if person_research %}
+                <div class="mt-2 p-2 bg-light rounded">
+                  <p class="card-text text-sm mb-0">
+                    <strong>{{ site.data[site.active_lang].strings.team.team_research_interests }}:</strong> {{ person_research }}
+                  </p>
+                </div>
+              {% endif %}
+              
+              {% if person_current_pos and category_key == "past_members" %}
+                <div class="mt-2 text-sm text-gray-600">
+                  <strong>{{ site.data[site.active_lang].strings.team.team_current_position }}:</strong> {{ person_current_pos }}
+                </div>
+              {% endif %}
+
+              {% comment %} 人员详情页链接：和第二段代码一致 {% endcomment %}
+              <a href="{% if is_default_lang %}{{ "/people/" | append: person.id | append: "/" | relative_url }}{% else %}{{ "/" | append: site.active_lang | append: "/people/" | append: person.id | append: "/" | relative_url }}{% endif %}"
+                 class="mt-2 d-inline-block text-decoration-none">
+                {{ site.data[site.active_lang].strings.team.view_more | default: "查看详情" }}
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
   </article>
 </div>
+
+{% comment %} 保留第二段代码的样式修复 {% endcomment %}
+<style>
+  .transition-all { transition-property: all; }
+  .duration-300 { transition-duration: 0.3s; }
+  .hover-shadow-xl:hover { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); }
+  .hover-translate-up:hover { transform: translateY(-2px); }
+  .g-5 { gap: 3rem; }
+  .card-title { font-size: 1.1rem; }
+  .card-body.text-center {
+    text-align: center !important;
+  }
+  .d-flex.justify-content-center {
+    justify-content: center !important;
+  }
+  /* 兼容原代码的profile浮动样式 */
+  .profile.float-left { float: left; margin-right: 2rem; }
+  .profile.float-right { float: right; margin-left: 2rem; }
+  .clearfix::after { content: ""; clear: both; display: table; }
+</style>
