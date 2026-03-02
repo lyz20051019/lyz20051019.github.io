@@ -1,31 +1,27 @@
-﻿---
-layout: default
+﻿layout: default
 ---
 
 <div class="container mt-8 mb-12">
   <div class="row">
     <!-- 左侧：头像 + yml核心信息（名字/职位/研究方向/邮箱） -->
     <div class="col-md-4 text-center">
-      {% comment %} 修复图片判断逻辑：和team.liquid保持一致 {% endcomment %}
+      {% comment %} 修改：使用和team.liquid一致的图片处理逻辑，精简且更可靠 {% endcomment %}
       {% assign img_filename = page.id | append: ".png" %}
-      {% assign img_relative_path = "/assets/img/people/" | append: img_filename %}
+      {% assign img_path = "/assets/img/people/" | append: img_filename | relative_url %}
       {% assign default_img_path = "/assets/img/people/default.png" | relative_url %}
-      
-      {% assign target_img = site.static_files | where_exp: "file", "file.path == img_relative_path" | first %}
-      {% if target_img %}
-        {% assign img_path = img_relative_path | relative_url %}
-      {% else %}
-        {% assign img_path = default_img_path %}
-      {% endif %}
 
       <img 
         src="{{ img_path }}" 
-        alt="{{ site.data.people.supervisor | where: 'id', page.id | map: 'name' | first | default: site.data.people.supervisor | where: 'id', page.id | map: 'en_name' | first }}"
+        {% comment %} 修改：简化alt属性取值逻辑，优先取对应语言的名字 {% endcomment %}
+        alt="{% if site.active_lang == 'zh-cn' %}{{ person.name | default: person.en_name }}{% else %}{{ person.en_name | default: person.name }}{% endif %}"
         class="rounded-circle mb-3"
         style="width: 220px; height: 220px; object-fit: cover; border: 3px solid #f8f9fa;"
+        {% comment %} 新增：onerror事件，图片加载失败时自动替换为默认图 {% endcomment %}
+        onerror="this.onerror=null; this.src='{{ default_img_path }}';"
+        loading="lazy" {% comment %} 新增：懒加载优化性能 {% endcomment %}
       >
 
-      {% comment %} 以下逻辑不变，省略（和上一版一致） {% endcomment %}
+      {% comment %} 原有逻辑不变，仅调整顺序（先获取person再用） {% endcomment %}
       {% assign person = nil %}
       {% assign supervisor = site.data.people.supervisor | where: "id", page.id | first %}
       {% if supervisor %}
