@@ -1,27 +1,12 @@
-﻿layout: default
+﻿---
+layout: default
 ---
 
 <div class="container mt-8 mb-12">
   <div class="row">
     <!-- 左侧：头像 + yml核心信息（名字/职位/研究方向/邮箱） -->
     <div class="col-md-4 text-center">
-      {% comment %} 修改：使用和team.liquid一致的图片处理逻辑，精简且更可靠 {% endcomment %}
-      {% assign img_filename = page.id | append: ".png" %}
-      {% assign img_path = "/assets/img/people/" | append: img_filename | relative_url %}
-      {% assign default_img_path = "/assets/img/people/default.png" | relative_url %}
-
-      <img 
-        src="{{ img_path }}" 
-        {% comment %} 修改：简化alt属性取值逻辑，优先取对应语言的名字 {% endcomment %}
-        alt="{% if site.active_lang == 'zh-cn' %}{{ person.name | default: person.en_name }}{% else %}{{ person.en_name | default: person.name }}{% endif %}"
-        class="rounded-circle mb-3"
-        style="width: 220px; height: 220px; object-fit: cover; border: 3px solid #f8f9fa;"
-        {% comment %} 新增：onerror事件，图片加载失败时自动替换为默认图 {% endcomment %}
-        onerror="this.onerror=null; this.src='{{ default_img_path }}';"
-        loading="lazy" {% comment %} 新增：懒加载优化性能 {% endcomment %}
-      >
-
-      {% comment %} 原有逻辑不变，仅调整顺序（先获取person再用） {% endcomment %}
+      {% comment %} 第一步：先获取person信息（用于alt属性） {% endcomment %}
       {% assign person = nil %}
       {% assign supervisor = site.data.people.supervisor | where: "id", page.id | first %}
       {% if supervisor %}
@@ -38,6 +23,23 @@
         {% endif %}
       {% endif %}
 
+      {% comment %} 第二步：图片处理（核心修复：用绝对路径，去掉relative_url） {% endcomment %}
+      {% assign img_filename = page.id | append: ".png" %}
+      {% assign img_path = "/assets/img/people/" | append: img_filename %} <!-- 直接用根目录绝对路径 -->
+      {% assign default_img_path = "/assets/img/people/default.png" %} <!-- 默认图也用绝对路径 -->
+
+      <img 
+        src="{{ img_path }}" 
+        {% comment %} alt属性：优先当前语言的名字，兼容person为空的情况 {% endcomment %}
+        alt="{% if person %}{% if site.active_lang == 'zh-cn' %}{{ person.name | default: person.en_name }}{% else %}{{ person.en_name | default: person.name }}{% endif %}{% else %}{{ page.id }}{% endif %}"
+        class="rounded-circle mb-3"
+        style="width: 220px; height: 220px; object-fit: cover; border: 3px solid #f8f9fa;"
+        {% comment %} onerror：默认图也用绝对路径 {% endcomment %}
+        onerror="this.onerror=null; this.src='{{ default_img_path }}';"
+        loading="lazy"
+      >
+
+      {% comment %} 原有信息展示逻辑（无修改） {% endcomment %}
       {% if person %}
         {% if site.active_lang == "zh-cn" %}
           <h2 class="fw-bold mb-1">{{ person.name }}</h2>
