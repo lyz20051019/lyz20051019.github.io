@@ -8,14 +8,32 @@ layout: page
         <hr>
         <div class="profile float-{% if profile.align == 'left' %}left{% else %}right{% endif %}">
           {% if profile.image %}
-            {% assign profile_image_path = profile.image | prepend: 'assets/img/' %}
+            {% comment %} 1. 图片路径配置：保留原有路径逻辑，新增默认图片路径 {% endcomment %}
+            {% assign profile_image_path = profile.image | prepend: 'assets/img/' | relative_url %}
+            {% assign default_img_path = "/assets/img/people/default.png" | relative_url %}
+            
+            {% comment %} 2. 图片样式类：保留圆形/方形区分，新增第一段的样式优化 {% endcomment %}
             {% if profile.image_circular %}
               {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
+              {% assign img_style = "width: 160px; height: 160px; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);" %}
             {% else %}
               {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
+              {% assign img_style = "object-fit: cover; border: 4px solid white; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);" %}
             {% endif %}
+            
+            {% comment %} 3. 图片尺寸配置：保留原有sizes逻辑 {% endcomment %}
             {% capture sizes %}(min-width: {{ site.max_width }}) {{ site.max_width | minus: 30 | times: 0.3}}px, (min-width: 576px) 30vw, 95vw"{% endcapture %}
-            {% include figure.liquid loading="eager" path=profile_image_path class=profile_image_class sizes=sizes alt=profile.image %}
+            
+            {% comment %} 4. 核心修改：替换figure include为直接img标签，加入onerror和lazy加载 {% endcomment %}
+            <img 
+              src="{{ profile_image_path }}" 
+              onerror="this.onerror=null; this.src='{{ default_img_path }}';"  <!-- 加载失败替换默认图 -->
+              alt="{{ profile.image }}" 
+              class="{{ profile_image_class }}" 
+              sizes={{ sizes }}
+              style="{{ img_style }}"  <!-- 新增样式优化 -->
+              loading="lazy"  <!-- 懒加载，替换原有eager -->
+            >
           {% endif %}
           {% if profile.more_info %}
             <div class="more-info">{{ profile.more_info }}</div>
