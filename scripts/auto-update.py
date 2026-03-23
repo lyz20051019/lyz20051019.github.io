@@ -13,15 +13,15 @@ CLIENT_SECRET = os.getenv("ORCID_CLIENT_SECRET")
 
 # 2. 你想抓取的多个目标学者 ORCID ID（列表形式，可添加多个）
 TARGET_ORCID_IDS = [
-    "0000-0002-1825-0097",  # 示例ID 1
-    "0000-0003-4717-2814"
+    "0000-0003-4717-2814",
+    "0000-0003-2075-366X"
 ]
 
 # 3. 输出文件名（工作目录为项目根目录，路径正确）
 OUTPUT_FILE = "./_bibliography/papers.bib"
 
 # 4. 每个ORCID ID的抓取数量限制 (0表示无限制)
-LIMIT_PER_ORCID = 5
+LIMIT_PER_ORCID = 0
 
 # 5. 请求超时设置（秒）
 TIMEOUT = 15
@@ -42,6 +42,40 @@ class Colors:
 processed_dois = set()
 # 全局BibTeX条目列表
 all_bib_entries = []
+
+def load_existing_selected_dois() -> set:
+    """加载现有BibTeX文件中包含selected = {true}的DOI集合"""
+    selected_dois = set()
+    if not os.path.exists(OUTPUT_FILE):
+        print(f"{Colors.BLUE}📄 未找到现有BibTeX文件，无selected字段需要保留{Colors.RESET}")
+        return selected_dois
+
+    print(f"{Colors.BLUE}📄 正在读取现有BibTeX文件，保留selected = {{true}}的条目...{Colors.RESET}")
+    try:
+        with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
+            bib_content = f.read()
+
+        # 正则匹配所有@article条目（兼容各种格式）
+        article_pattern = re.compile(r'@article\{[^}]+\n(.*?)\n\}', re.DOTALL)
+        entries = article_pattern.findall(bib_content)
+
+        for entry_content in entries:
+            # 提取DOI（兼容空格、大小写）
+            doi_match = re.search(r'doi\s*=\s*\{([^}]+)\}', entry_content, re.IGNORECASE)
+            # 提取selected字段（匹配true/TRUE/True）
+            selected_match = re.search(r'selected\s*=\s*\{(true)\}', entry_content, re.IGNORECASE)
+
+            if doi_match and selected_match:
+                doi = doi_match.group(1).strip()
+                # 清洗DOI格式（移除https://doi.org/前缀）
+                clean_doi = doi.replace("https://doi.org/", "").strip()
+                selected_dois.add(clean_doi)
+                print(f"{Colors.GREEN}🔖 保留DOI {clean_doi} 的selected=true字段{Colors.RESET}")
+
+    except Exception as e:
+        print(f"{Colors.YELLOW}⚠️  读取现有BibTeX文件失败: {str(e)}，将不会保留selected字段{Colors.RESET}")
+
+    return selected_dois
 
 def get_access_token() -> Optional[str]:
     """获取 Access Token (机器对机器模式)，带完善错误处理"""
@@ -266,8 +300,8 @@ def generate_bib_key(metadata: Dict) -> str:
         # 生成备用键
         return f"Unknown{int(time.time())}"
 
-def format_bib_entry(metadata: Dict) -> Optional[str]:
-    """格式化BibTeX条目为指定格式"""
+def format_bib_entry(metadata: Dict, selected_dois: set) -> Optional[str]:
+    """格式化BibTeX条目为指定格式，保留selected = {true}字段"""
     try:
         if not metadata:
             return None
@@ -316,6 +350,12 @@ def format_bib_entry(metadata: Dict) -> Optional[str]:
         # HTML链接（必选）
         fields.append(f"  html = {{{metadata.get('html_url', '')}}}")
         
+        # 核心功能：保留selected = {true}字段
+        doi = metadata.get('doi', '')
+        if doi in selected_dois:
+            fields.append(f"  selected = {{true}}")
+            print(f"{Colors.BLUE}      📌 为DOI {doi} 保留selected = {{true}}字段{Colors.RESET}")
+        
         # 拼接最终条目
         entry = f"@article{{{bib_key},\n"
         entry += ",\n".join(fields)
@@ -327,7 +367,7 @@ def format_bib_entry(metadata: Dict) -> Optional[str]:
         print(f"{Colors.YELLOW}⚠️  格式化失败: {str(e)}{Colors.RESET}")
         return None
 
-def process_single_orcid(orcid_id: str, token: str):
+def process_single_orcid(orcid_id: str, token: str, selected_dois: set):
     """处理单个ORCID ID的完整流程"""
     # 获取该ORCID的DOI列表（自动去重）
     works = get_works_list(orcid_id, token)
@@ -346,8 +386,8 @@ def process_single_orcid(orcid_id: str, token: str):
             print(f"{Colors.YELLOW}      ❌ 元数据获取失败，跳过{Colors.RESET}")
             continue
         
-        # 格式化BibTeX条目
-        bib_entry = format_bib_entry(metadata)
+        # 格式化BibTeX条目（传入selected_dois保留字段）
+        bib_entry = format_bib_entry(metadata, selected_dois)
         if not bib_entry:
             print(f"{Colors.YELLOW}      ❌ 条目格式化失败，跳过{Colors.RESET}")
             continue
@@ -361,20 +401,23 @@ def process_single_orcid(orcid_id: str, token: str):
 
 def main():
     """主函数：批量处理多个ORCID ID，去重后生成最终文件"""
-    print(f"{Colors.BLUE}===== 多ORCID ID 论文爬取工具（自动去重版） ====={Colors.RESET}")
+    print(f"{Colors.BLUE}===== 多ORCID ID 论文爬取工具（自动去重+保留selected字段版） ====={Colors.RESET}")
     print(f"{Colors.BLUE}待处理ORCID ID数量: {len(TARGET_ORCID_IDS)}{Colors.RESET}")
     
-    # 1. 获取Token
+    # 第一步：加载现有文件中标记为selected=true的DOI
+    selected_dois = load_existing_selected_dois()
+    
+    # 第二步：获取Token
     token = get_access_token()
     if not token:
         print(f"{Colors.RED}❌ 无法获取Token，程序退出{Colors.RESET}")
         return
     
-    # 2. 批量处理每个ORCID ID
+    # 第三步：批量处理每个ORCID ID（传入selected_dois）
     for orcid_id in TARGET_ORCID_IDS:
-        process_single_orcid(orcid_id, token)
+        process_single_orcid(orcid_id, token, selected_dois)
     
-    # 3. 写入最终文件（所有ID的去重结果）
+    # 第四步：写入最终文件（所有ID的去重结果）
     if all_bib_entries:
         try:
             # 确保输出目录存在
