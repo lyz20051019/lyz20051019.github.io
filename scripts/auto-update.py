@@ -42,6 +42,10 @@ class Colors:
 processed_dois = set()
 # 全局BibTeX条目列表
 all_bib_entries = []
+# 新增：来自papers_google.bib的DOI集合（用于排除重叠文章）
+google_exclude_dois = set()
+# 新增：papers_google.bib的完整内容（用于追加到最终文件）
+google_bib_full_content = ""
 
 def load_existing_selected_dois() -> set:
     """加载现有BibTeX文件中包含selected = {true}的DOI集合"""
@@ -76,6 +80,48 @@ def load_existing_selected_dois() -> set:
         print(f"{Colors.YELLOW}⚠️  读取现有BibTeX文件失败: {str(e)}，将不会保留selected字段{Colors.RESET}")
 
     return selected_dois
+
+def load_google_bib_dois() -> set:
+    """新增：加载papers_google.bib中的所有DOI，用于排除重叠文章"""
+    google_dois = set()
+    # 获取papers_google.bib路径（与输出文件同目录）
+    google_bib_path = os.path.join(os.path.dirname(OUTPUT_FILE), "papers_google.bib")
+    if not os.path.exists(google_bib_path):
+        print(f"{Colors.BLUE}📄 未找到papers_google.bib，无需要排除的重叠文章{Colors.RESET}")
+        return google_dois
+
+    print(f"{Colors.BLUE}📄 正在读取papers_google.bib，提取所有DOI用于去重...{Colors.RESET}")
+    try:
+        with open(google_bib_path, "r", encoding="utf-8") as f:
+            bib_content = f.read()
+
+        # 正则匹配所有BibTeX条目的DOI
+        doi_pattern = re.compile(r'doi\s*=\s*\{([^}]+)\}', re.IGNORECASE)
+        doi_matches = doi_pattern.findall(bib_content)
+
+        for doi in doi_matches:
+            clean_doi = doi.replace("https://doi.org/", "").strip()
+            google_dois.add(clean_doi)
+            print(f"{Colors.YELLOW}🚫 已记录排除DOI: {clean_doi}（来自papers_google.bib）{Colors.RESET}")
+
+        print(f"{Colors.GREEN}✅ 共提取 {len(google_dois)} 个需排除的DOI{Colors.RESET}")
+
+    except Exception as e:
+        print(f"{Colors.YELLOW}⚠️  读取papers_google.bib失败: {str(e)}，将不执行重叠排除{Colors.RESET}")
+
+    return google_dois
+
+def read_google_bib_full_content() -> str:
+    """新增：读取papers_google.bib的完整内容，用于追加到最终文件"""
+    google_bib_path = os.path.join(os.path.dirname(OUTPUT_FILE), "papers_google.bib")
+    if not os.path.exists(google_bib_path):
+        return ""
+    try:
+        with open(google_bib_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except Exception as e:
+        print(f"{Colors.YELLOW}⚠️  读取papers_google.bib内容失败: {str(e)}{Colors.RESET}")
+        return ""
 
 def get_access_token() -> Optional[str]:
     """获取 Access Token (机器对机器模式)，带完善错误处理"""
@@ -123,7 +169,7 @@ def get_access_token() -> Optional[str]:
         return None
 
 def get_works_list(orcid_id: str, token: str) -> List[Tuple[str, str]]:
-    """从单个ORCID ID获取文章DOI和标题列表，带错误处理"""
+    """从单个ORCID ID获取文章DOI和标题列表，带错误处理 + 排除google重叠DOI"""
     print(f"\n{Colors.BLUE}===== 处理 ORCID ID: {orcid_id} ====={Colors.RESET}")
     print(f"{Colors.BLUE}正在获取用户 {orcid_id} 的文章列表...{Colors.RESET}")
     url = f"https://pub.orcid.org/v3.0/{orcid_id}/works"
@@ -167,8 +213,10 @@ def get_works_list(orcid_id: str, token: str) -> List[Tuple[str, str]]:
             if found_doi:
                 # 清洗DOI格式
                 clean_doi = found_doi.replace("https://doi.org/", "").strip()
-                # 去重检查：仅添加未处理过的DOI
-                if clean_doi not in processed_dois:
+                # 核心修改：双重过滤 - 1.排除google重叠 2.全局去重
+                if clean_doi in google_exclude_dois:
+                    print(f"{Colors.YELLOW}🚫 跳过重叠DOI: {clean_doi}（已存在于papers_google.bib）{Colors.RESET}")
+                elif clean_doi not in processed_dois:
                     processed_dois.add(clean_doi)
                     dois.append((title, clean_doi))
                 else:
@@ -369,7 +417,7 @@ def format_bib_entry(metadata: Dict, selected_dois: set) -> Optional[str]:
 
 def process_single_orcid(orcid_id: str, token: str, selected_dois: set):
     """处理单个ORCID ID的完整流程"""
-    # 获取该ORCID的DOI列表（自动去重）
+    # 获取该ORCID的DOI列表（自动去重+排除google重叠）
     works = get_works_list(orcid_id, token)
     if not works:
         print(f"{Colors.YELLOW}⚠️  ORCID {orcid_id} 未获取到任何新DOI{Colors.RESET}")
@@ -400,36 +448,48 @@ def process_single_orcid(orcid_id: str, token: str, selected_dois: set):
         time.sleep(REQUEST_DELAY)
 
 def main():
-    """主函数：批量处理多个ORCID ID，去重后生成最终文件"""
-    print(f"{Colors.BLUE}===== 多ORCID ID 论文爬取工具（自动去重+保留selected字段版） ====={Colors.RESET}")
+    """主函数：批量处理多个ORCID ID，去重+排除google重叠，追加google bib内容"""
+    print(f"{Colors.BLUE}===== 多ORCID ID 论文爬取工具（自动去重+排除google重叠+保留selected） ====={Colors.RESET}")
     print(f"{Colors.BLUE}待处理ORCID ID数量: {len(TARGET_ORCID_IDS)}{Colors.RESET}")
     
     # 第一步：加载现有文件中标记为selected=true的DOI
     selected_dois = load_existing_selected_dois()
     
-    # 第二步：获取Token
+    # 第二步：加载papers_google.bib的DOI（排除重叠）和完整内容
+    global google_exclude_dois, google_bib_full_content
+    google_exclude_dois = load_google_bib_dois()
+    google_bib_full_content = read_google_bib_full_content()
+    
+    # 第三步：获取Token
     token = get_access_token()
     if not token:
         print(f"{Colors.RED}❌ 无法获取Token，程序退出{Colors.RESET}")
         return
     
-    # 第三步：批量处理每个ORCID ID（传入selected_dois）
+    # 第四步：批量处理每个ORCID ID
     for orcid_id in TARGET_ORCID_IDS:
         process_single_orcid(orcid_id, token, selected_dois)
     
-    # 第四步：写入最终文件（所有ID的去重结果）
-    if all_bib_entries:
+    # 第五步：写入最终文件（新条目 + 追加papers_google.bib）
+    if all_bib_entries or google_bib_full_content.strip():
         try:
             # 确保输出目录存在
             output_dir = os.path.dirname(OUTPUT_FILE)
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
             
+            # 拼接最终内容：新爬取的无重叠文章 + 追加google bib
+            final_content = "\n\n".join(all_bib_entries)
+            if google_bib_full_content.strip():
+                final_content += "\n\n" + google_bib_full_content
+
             with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-                f.write("\n\n".join(all_bib_entries))
+                f.write(final_content)
             
             print(f"\n{Colors.GREEN}🎉 批量处理完成！{Colors.RESET}")
-            print(f"{Colors.GREEN}✅ 共生成 {len(all_bib_entries)} 个去重后的BibTeX条目{Colors.RESET}")
+            print(f"{Colors.GREEN}✅ 共生成 {len(all_bib_entries)} 个新BibTeX条目（已排除papers_google重叠）{Colors.RESET}")
+            if google_bib_full_content.strip():
+                print(f"{Colors.GREEN}✅ 已完整追加papers_google.bib内容{Colors.RESET}")
             print(f"{Colors.GREEN}✅ 已写入文件: {os.path.abspath(OUTPUT_FILE)}{Colors.RESET}")
             
         except Exception as e:
