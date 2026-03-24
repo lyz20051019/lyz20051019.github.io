@@ -230,8 +230,8 @@ terser:
 # -----------------------------------------------------------------------------
 
 scholar:
-  last_name: [Hong]
-  first_name: [Xin]
+  last_name: [Hong, Xin]
+  first_name: [Xin, Hong]
 
   style: apa
   locale: en
