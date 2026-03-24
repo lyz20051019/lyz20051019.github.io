@@ -56,7 +56,7 @@ def load_existing_selected_dois() -> set:
     return selected_dois
 
 # -----------------------------------------------------------------------------
-# 2. 加载 papers_google.bib，提取 DOI + 标题
+# 2. 加载 papers_google.bib，提取 完整 DOI + 标题
 # -----------------------------------------------------------------------------
 def load_google_bib():
     global google_bib_content, google_dois, google_clean_titles
@@ -68,24 +68,29 @@ def load_google_bib():
     with open(g_path, "r", encoding="utf-8") as f:
         google_bib_content = f.read()
 
-    # 提取所有条目
     entry_pattern = re.compile(r'@article\{.*?\}', re.DOTALL)
     entries = entry_pattern.findall(google_bib_content)
 
+    doi_pattern = re.compile(r'doi\.org/([0-9]+\.[0-9]+/[^/]+)', re.I)
+
     for e in entries:
-        # 从 html 或 doi 提取 DOI
-        doi = None
+        # 从 html 提取 完整 DOI
         html_match = re.search(r'html\s*=\s*\{([^}]+)\}', e, re.I)
+        doi = None
         if html_match:
             url = html_match.group(1).strip()
-            doi_match_url = re.search(r'doi\.org/([^/]+)', url, re.I)
-            if doi_match_url:
-                doi = doi_match_url.group(1).strip()
+            dm = doi_pattern.search(url)
+            if dm:
+                doi = dm.group(1)
 
-        doi_field_match = re.search(r'doi\s*=\s*\{([^}]+)\}', e, re.I)
-        if doi_field_match and not doi:
-            doi = doi_field_match.group(1).strip()
-            doi = re.sub(r'https?://doi\.org/', '', doi, flags=re.I)
+        # 从 doi 字段兜底
+        if not doi:
+            df_match = re.search(r'doi\s*=\s*\{([^}]+)\}', e, re.I)
+            if df_match:
+                doi_val = df_match.group(1).strip()
+                dm = doi_pattern.search(f"https://doi.org/{doi_val}")
+                if dm:
+                    doi = dm.group(1)
 
         if doi:
             google_dois.add(doi)
@@ -94,34 +99,38 @@ def load_google_bib():
         title_match = re.search(r'title\s*=\s*\{(.*?)\}', e, re.I | re.DOTALL)
         if title_match:
             t = title_match.group(1).lower()
+            t = re.sub(r'<[^>]+>', '', t)
             t = re.sub(r'[^a-z0-9]', '', t)
             google_clean_titles.add(t)
 
-    print(f"{Colors.GREEN}✅ 加载 papers_google.bib：{len(google_dois)} 个 DOI，{len(google_clean_titles)} 个标题{Colors.RESET}")
+    print(f"{Colors.GREEN}✅ 加载 papers_google.bib：{len(google_dois)} 个完整 DOI，{len(google_clean_titles)} 个标题{Colors.RESET}")
 
 # -----------------------------------------------------------------------------
-# 3. 从一条 bib 条目里提取 DOI（从 html） + 清洗标题
+# 3. 从一条 bib 条目里提取 完整 DOI + 清洗标题
 # -----------------------------------------------------------------------------
 def extract_doi_and_clean_title(entry):
-    # DOI
+    doi_pattern = re.compile(r'doi\.org/([0-9]+\.[0-9]+/[^/]+)', re.I)
+
+    # 完整 DOI
     doi = None
     html = re.search(r'html\s*=\s*\{([^}]+)\}', entry, re.I)
     if html:
-        m = re.search(r'doi\.org/([^/]+)', html.group(1), re.I)
+        m = doi_pattern.search(html.group(1))
         if m:
-            doi = m.group(1).strip()
+            doi = m.group(1)
 
-    # 标题
+    # 标题（去掉斜体标签再清洗）
     title = ""
     t_match = re.search(r'title\s*=\s*\{(.*?)\}', entry, re.I | re.DOTALL)
     if t_match:
         title = t_match.group(1).lower()
+        title = re.sub(r'<[^>]+>', '', title)
         title = re.sub(r'[^a-z0-9]', '', title)
 
     return doi, title
 
 # -----------------------------------------------------------------------------
-# 4. ORCID 相关抓取（原样保留）
+# 4. ORCID 相关抓取
 # -----------------------------------------------------------------------------
 def get_access_token() -> Optional[str]:
     url = "https://orcid.org/oauth/token"
@@ -231,7 +240,7 @@ def format_entry(meta, selected_dois):
 # 主流程
 # -----------------------------------------------------------------------------
 def main():
-    print(f"{Colors.BLUE}=== ORCID 抓取 → 双重去重(DOI+标题) → 追加 google ==={Colors.RESET}")
+    print(f"{Colors.BLUE}=== ORCID 抓取 → 双重去重(完整DOI+标题) → 追加 google ==={Colors.RESET}")
     selected_dois = load_existing_selected_dois()
     load_google_bib()
 
@@ -251,21 +260,24 @@ def main():
                     all_bib_entries.append(entry)
             time.sleep(REQUEST_DELAY)
 
-    # 2. 双重去重：DOI 或 标题重复 → 删
+    # 2. 真正的双重去重：完整DOI 或 标题重复才删
     final = []
     for e in all_bib_entries:
         doi, clean_title = extract_doi_and_clean_title(e)
-        is_dup = False
+        dup = False
+
         if doi and doi in google_dois:
-            is_dup = True
+            dup = True
         elif clean_title and clean_title in google_clean_titles:
-            is_dup = True
-        if is_dup:
-            print(f"{Colors.YELLOW}🚫 去重：{doi or clean_title[:40]}{Colors.RESET}")
+            dup = True
+
+        if dup:
+            show = doi if doi else clean_title[:40]
+            print(f"{Colors.YELLOW}🚫 去重：{show}{Colors.RESET}")
         else:
             final.append(e)
 
-    # 3. 写入：新文献 + google
+    # 3. 写入
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
     out = "\n\n".join(final)
     if google_bib_content.strip():
@@ -274,7 +286,7 @@ def main():
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(out)
 
-    print(f"\n{Colors.GREEN}🎉 完成！保留 {len(final)} 篇新文献 + 完整追加 papers_google.bib{Colors.RESET}")
+    print(f"\n{Colors.GREEN}🎉 完成！保留 {len(final)} 篇新文献 + 追加 papers_google.bib{Colors.RESET}")
 
 if __name__ == "__main__":
     try:
