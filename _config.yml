@@ -230,8 +230,8 @@ terser:
 # -----------------------------------------------------------------------------
 
 scholar:
-  last_name: [Einstein]
-  first_name: [Albert, A.]
+  last_name: [Hong]
+  first_name: [Xin]
 
   style: apa
   locale: en
