@@ -6,31 +6,19 @@ import re
 from urllib.parse import quote
 from typing import Dict, List, Optional, Tuple
 
-# ================= 配置区域 (请修改这里) =================
-# 1. 你的 ORCID API 凭证 (从开发者工具页面复制)
+# ================= 配置区域 =================
 CLIENT_ID = os.getenv("ORCID_CLIENT_ID")
 CLIENT_SECRET = os.getenv("ORCID_CLIENT_SECRET")
-
-# 2. 你想抓取的多个目标学者 ORCID ID（列表形式，可添加多个）
 TARGET_ORCID_IDS = [
     "0000-0003-4717-2814",
     "0000-0003-2075-366X"
 ]
-
-# 3. 输出文件名（工作目录为项目根目录，路径正确）
 OUTPUT_FILE = "./_bibliography/papers.bib"
-
-# 4. 每个ORCID ID的抓取数量限制 (0表示无限制)
 LIMIT_PER_ORCID = 0
-
-# 5. 请求超时设置（秒）
 TIMEOUT = 15
-
-# 6. 请求间隔（秒），防止触发反爬限制
 REQUEST_DELAY = 1
-# =======================================================
+# ============================================
 
-# 日志颜色配置
 class Colors:
     GREEN = "\033[92m"
     YELLOW = "\033[93m"
@@ -38,78 +26,104 @@ class Colors:
     BLUE = "\033[94m"
     RESET = "\033[0m"
 
-# 全局DOI去重集合
-processed_dois = set()
-# 全局BibTeX条目列表（爬取下来的所有）
 all_bib_entries = []
-# 来自 papers_google.bib 的所有 DOI（用于最后去重）
+
+# 存储 papers_google.bib 里的去重依据
 google_dois = set()
-# papers_google.bib 完整内容
+google_clean_titles = set()
 google_bib_content = ""
 
+# -----------------------------------------------------------------------------
+# 1. 读取原有 selected = {true} 的 DOI
+# -----------------------------------------------------------------------------
 def load_existing_selected_dois() -> set:
-    """加载现有BibTeX文件中包含selected = {true}的DOI集合"""
     selected_dois = set()
     if not os.path.exists(OUTPUT_FILE):
-        print(f"{Colors.BLUE}📄 未找到现有BibTeX文件，无selected字段需要保留{Colors.RESET}")
         return selected_dois
-
-    print(f"{Colors.BLUE}📄 正在读取现有BibTeX文件，保留selected = {{true}}的条目...{Colors.RESET}")
     try:
         with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
-            bib_content = f.read()
-
-        article_pattern = re.compile(r'@article\{[^}]+\n(.*?)\n\}', re.DOTALL)
-        entries = article_pattern.findall(bib_content)
-
-        for entry_content in entries:
-            doi_match = re.search(r'doi\s*=\s*\{([^}]+)\}', entry_content, re.IGNORECASE)
-            selected_match = re.search(r'selected\s*=\s*\{(true)\}', entry_content, re.IGNORECASE)
-
-            if doi_match and selected_match:
+            text = f.read()
+        pattern = re.compile(r'@article\{.*?\}', re.DOTALL)
+        for entry in pattern.findall(text):
+            doi_match = re.search(r'doi\s*=\s*\{([^}]+)\}', entry, re.I)
+            sel_match = re.search(r'selected\s*=\s*\{true\}', entry, re.I)
+            if doi_match and sel_match:
                 doi = doi_match.group(1).strip()
-                clean_doi = doi.replace("https://doi.org/", "").strip()
-                selected_dois.add(clean_doi)
-                print(f"{Colors.GREEN}🔖 保留DOI {clean_doi} 的selected=true字段{Colors.RESET}")
-
+                doi = re.sub(r'https?://doi\.org/', '', doi, flags=re.I)
+                selected_dois.add(doi)
     except Exception as e:
-        print(f"{Colors.YELLOW}⚠️  读取现有BibTeX文件失败: {str(e)}，将不会保留selected字段{Colors.RESET}")
-
+        print(f"{Colors.YELLOW}⚠️ 读取 selected 失败：{e}{Colors.RESET}")
     return selected_dois
 
-def load_google_bib_info():
-    """加载 papers_google.bib 的所有DOI 和 完整内容"""
-    global google_dois, google_bib_content
-    google_path = os.path.join(os.path.dirname(OUTPUT_FILE), "papers_google.bib")
-
-    if not os.path.exists(google_path):
-        print(f"{Colors.YELLOW}⚠️  未找到 papers_google.bib{Colors.RESET}")
+# -----------------------------------------------------------------------------
+# 2. 加载 papers_google.bib，提取 DOI + 标题
+# -----------------------------------------------------------------------------
+def load_google_bib():
+    global google_bib_content, google_dois, google_clean_titles
+    g_path = os.path.join(os.path.dirname(OUTPUT_FILE), "papers_google.bib")
+    if not os.path.exists(g_path):
+        print(f"{Colors.YELLOW}⚠️ 未找到 papers_google.bib{Colors.RESET}")
         return
 
-    try:
-        with open(google_path, "r", encoding="utf-8") as f:
-            google_bib_content = f.read()
+    with open(g_path, "r", encoding="utf-8") as f:
+        google_bib_content = f.read()
 
-        doi_pattern = re.compile(r'doi\s*=\s*\{([^}]+)\}', re.IGNORECASE)
-        found_dois = doi_pattern.findall(google_bib_content)
+    # 提取所有条目
+    entry_pattern = re.compile(r'@article\{.*?\}', re.DOTALL)
+    entries = entry_pattern.findall(google_bib_content)
 
-        for doi in found_dois:
-            clean_doi = doi.replace("https://doi.org/", "").strip()
-            google_dois.add(clean_doi)
+    for e in entries:
+        # 从 html 或 doi 提取 DOI
+        doi = None
+        html_match = re.search(r'html\s*=\s*\{([^}]+)\}', e, re.I)
+        if html_match:
+            url = html_match.group(1).strip()
+            doi_match_url = re.search(r'doi\.org/([^/]+)', url, re.I)
+            if doi_match_url:
+                doi = doi_match_url.group(1).strip()
 
-        print(f"{Colors.GREEN}✅ 读取 papers_google.bib 完成，共 {len(google_dois)} 条文献{Colors.RESET}")
-    except:
-        print(f"{Colors.RED}❌ 读取 papers_google.bib 失败{Colors.RESET}")
+        doi_field_match = re.search(r'doi\s*=\s*\{([^}]+)\}', e, re.I)
+        if doi_field_match and not doi:
+            doi = doi_field_match.group(1).strip()
+            doi = re.sub(r'https?://doi\.org/', '', doi, flags=re.I)
 
-def extract_doi_from_entry(entry: str) -> Optional[str]:
-    """从一条 BibTeX 条目中提取 DOI"""
-    match = re.search(r'doi\s*=\s*\{([^}]+)\}', entry, re.IGNORECASE)
-    if match:
-        return match.group(1).replace("https://doi.org/", "").strip()
-    return None
+        if doi:
+            google_dois.add(doi)
 
+        # 清洗标题
+        title_match = re.search(r'title\s*=\s*\{(.*?)\}', e, re.I | re.DOTALL)
+        if title_match:
+            t = title_match.group(1).lower()
+            t = re.sub(r'[^a-z0-9]', '', t)
+            google_clean_titles.add(t)
+
+    print(f"{Colors.GREEN}✅ 加载 papers_google.bib：{len(google_dois)} 个 DOI，{len(google_clean_titles)} 个标题{Colors.RESET}")
+
+# -----------------------------------------------------------------------------
+# 3. 从一条 bib 条目里提取 DOI（从 html） + 清洗标题
+# -----------------------------------------------------------------------------
+def extract_doi_and_clean_title(entry):
+    # DOI
+    doi = None
+    html = re.search(r'html\s*=\s*\{([^}]+)\}', entry, re.I)
+    if html:
+        m = re.search(r'doi\.org/([^/]+)', html.group(1), re.I)
+        if m:
+            doi = m.group(1).strip()
+
+    # 标题
+    title = ""
+    t_match = re.search(r'title\s*=\s*\{(.*?)\}', entry, re.I | re.DOTALL)
+    if t_match:
+        title = t_match.group(1).lower()
+        title = re.sub(r'[^a-z0-9]', '', title)
+
+    return doi, title
+
+# -----------------------------------------------------------------------------
+# 4. ORCID 相关抓取（原样保留）
+# -----------------------------------------------------------------------------
 def get_access_token() -> Optional[str]:
-    print(f"{Colors.BLUE}正在申请 Access Token...{Colors.RESET}")
     url = "https://orcid.org/oauth/token"
     headers = {"Accept": "application/json"}
     data = {
@@ -118,182 +132,152 @@ def get_access_token() -> Optional[str]:
         "grant_type": "client_credentials",
         "scope": "/read-public"
     }
-
     try:
-        response = requests.post(url, headers=headers, data=data, timeout=TIMEOUT, verify=True)
-        response.raise_for_status()
-        token_data = response.json()
-        token = token_data.get("access_token")
-        if not token:
-            print(f"{Colors.RED}❌ 获取 Token 失败{Colors.RESET}")
-            return None
-        print(f"{Colors.GREEN}✅ 成功获取 Token{Colors.RESET}")
-        return token
-    except:
-        print(f"{Colors.RED}❌ 获取 Token 失败{Colors.RESET}")
+        r = requests.post(url, headers=headers, data=data, timeout=TIMEOUT)
+        r.raise_for_status()
+        return r.json()["access_token"]
+    except Exception as e:
+        print(f"{Colors.RED}❌ Token 获取失败：{e}{Colors.RESET}")
         return None
 
-def get_works_list(orcid_id: str, token: str) -> List[Tuple[str, str]]:
-    print(f"\n{Colors.BLUE}===== 处理 ORCID: {orcid_id} ====={Colors.RESET}")
-    url = f"https://pub.orcid.org/v3.0/{orcid_id}/works"
+def get_works(orcid, token):
+    url = f"https://pub.orcid.org/v3.0/{orcid}/works"
     headers = {"Accept": "application/json", "Authorization": f"Bearer {token}"}
-
     try:
-        response = requests.get(url, headers=headers, timeout=TIMEOUT, verify=True)
-        response.raise_for_status()
-        data = response.json()
-        dois = []
-        groups = data.get('group', [])
-
-        for group in groups:
-            summaries = group.get('work-summary', [])
-            if not summaries: continue
-            summary = summaries[0]
-            title = summary.get('title', {}).get('title', {}).get('value', 'No Title')
-
-            found_doi = None
-            external_ids = summary.get('external-ids', {}).get('external-id', [])
-            for eid in external_ids:
-                if eid.get('external-id-type') == 'doi':
-                    found_doi = eid.get('external-id-value')
+        r = requests.get(url, headers=headers, timeout=TIMEOUT)
+        r.raise_for_status()
+        data = r.json()
+        res = []
+        for g in data.get("group", []):
+            ws = g.get("work-summary", [])
+            if not ws: continue
+            w = ws[0]
+            title = w.get("title", {}).get("title", {}).get("value", "")
+            doi = None
+            for eid in w.get("external-ids", {}).get("external-id", []):
+                if eid.get("external-id-type") == "doi":
+                    doi = eid.get("external-id-value")
                     break
-
-            if found_doi:
-                clean_doi = found_doi.replace("https://doi.org/", "").strip()
-                if clean_doi not in processed_dois:
-                    processed_dois.add(clean_doi)
-                    dois.append((title, clean_doi))
-
-                if LIMIT_PER_ORCID > 0 and len(dois) >= LIMIT_PER_ORCID:
-                    break
-
-        print(f"{Colors.GREEN}✅ 提取到 {len(dois)} 篇文献{Colors.RESET}")
-        return dois
-    except:
-        print(f"{Colors.RED}❌ 获取文献失败{Colors.RESET}")
+            if doi:
+                doi = re.sub(r'https?://doi\.org/', '', doi, flags=re.I)
+                res.append((title, doi))
+        return res
+    except Exception as e:
+        print(f"{Colors.RED}❌ ORCID 读取失败：{e}{Colors.RESET}")
         return []
 
-def get_work_metadata(doi: str) -> Optional[Dict]:
+def crossref_meta(doi):
     try:
         url = f"https://api.crossref.org/works/{quote(doi)}"
-        headers = {
-            "Accept": "application/json",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        }
-        response = requests.get(url, headers=headers, timeout=TIMEOUT)
-        response.raise_for_status()
-        data = response.json().get('message', {})
-
-        metadata = {
-            "title": data.get('title', ['No Title'])[0].strip(),
-            "year": str(data.get('published-print', {}).get('date-parts', [[0]])[0][0]) or
-                    str(data.get('published-online', {}).get('date-parts', [[0]])[0][0]) or "Unknown",
-            "journal": data.get('container-title', ['Unknown Journal'])[0].strip(),
-            "volume": data.get('volume', ''),
-            "issue": data.get('issue', ''),
-            "pages": data.get('page', ''),
-            "publisher": data.get('publisher', ''),
-            "authors": [],
+        headers = {"User-Agent": "Mozilla/5.0"}
+        r = requests.get(url, headers=headers, timeout=10)
+        r.raise_for_status()
+        m = r.json()["message"]
+        authors = []
+        for a in m.get("author", []):
+            given = a.get("given", "")
+            family = a.get("family", "")
+            authors.append(f"{given} {family}".strip())
+        year = "0"
+        if m.get("published-print"):
+            year = str(m["published-print"]["date-parts"][0][0])
+        elif m.get("published-online"):
+            year = str(m["published-online"]["date-parts"][0][0])
+        return {
+            "title": m.get("title", [""])[0],
+            "year": year,
+            "journal": m.get("container-title", [""])[0],
+            "volume": m.get("volume", ""),
+            "issue": m.get("issue", ""),
+            "pages": m.get("page", ""),
+            "publisher": m.get("publisher", ""),
+            "authors": authors,
             "doi": doi,
-            "html_url": f"https://doi.org/{doi}"
+            "html": f"https://doi.org/{doi}"
         }
-
-        for author in data.get('author', []):
-            family = author.get('family', '')
-            given = author.get('given', '')
-            metadata["authors"].append(f"{given} {family}".strip())
-
-        return metadata
-    except:
+    except Exception:
         return None
 
-def generate_bib_key(metadata):
+def make_bibkey(meta):
     try:
-        last_name = metadata['authors'][0].split()[-1] if metadata.get('authors') else "Unknown"
-        year = metadata.get('year', '0000')
-        title = re.sub(r'[^a-zA-Z0-9\s]', '', metadata.get('title', ''))
-        camel = ''.join([w.capitalize() for w in title.split()])
-        return f"{last_name}{year}{camel[:30]}"
+        last = meta["authors"][0].split()[-1] if meta.get("authors") else "Anon"
+        year = meta.get("year", "0000")
+        t = re.sub(r'[^A-Za-z]', '', meta.get("title", ""))[:20]
+        return f"{last}{year}{t}"
     except:
-        return f"Unknown{int(time.time())}"
+        return f"Auto{int(time.time())}"
 
-def format_bib_entry(metadata, selected_dois):
-    if not metadata: return None
-    key = generate_bib_key(metadata)
-    authors = " and ".join(metadata.get('authors', ['Unknown']))
-    fields = [
-        f"  title = {{{metadata['title']}}}",
-        f"  journal = {{{metadata['journal']}}}",
-        f"  abbr = {{{metadata['journal']}}}",
+def format_entry(meta, selected_dois):
+    if not meta: return None
+    key = make_bibkey(meta)
+    authors = " and ".join(meta.get("authors", ["Anonymous"]))
+    lines = [
+        f"  title = {{{meta['title']}}}",
+        f"  journal = {{{meta['journal']}}}",
+        f"  abbr = {{{meta['journal']}}}",
     ]
-    if metadata.get('volume'): fields.append(f"  volume = {{{metadata['volume']}}}")
-    if metadata.get('issue'): fields.append(f"  issue = {{{metadata['issue']}}}")
-    if metadata.get('pages'): fields.append(f"  pages = {{{metadata['pages']}}}")
-    fields.append(f"  year = {{{metadata['year']}}}")
-    fields.append(f"  author = {{{authors}}}")
-    if metadata.get('publisher'): fields.append(f"  publisher = {{{metadata['publisher']}}}")
-    fields.append(f"  html = {{{metadata['html_url']}}}")
-    if metadata['doi'] in selected_dois:
-        fields.append(f"  selected = {{true}}")
-        print(f"{Colors.BLUE}      📌 保留 selected = true{Colors.RESET}")
-    return f"@article{{{key},\n" + ",\n".join(fields) + "\n}\n"
+    if meta.get("volume"): lines.append(f"  volume = {{{meta['volume']}}}")
+    if meta.get("issue"): lines.append(f"  issue = {{{meta['issue']}}}")
+    if meta.get("pages"): lines.append(f"  pages = {{{meta['pages']}}}")
+    lines.append(f"  year = {{{meta['year']}}}")
+    lines.append(f"  author = {{{authors}}}")
+    if meta.get("publisher"): lines.append(f"  publisher = {{{meta['publisher']}}}")
+    lines.append(f"  html = {{{meta['html']}}}")
+    if meta["doi"] in selected_dois:
+        lines.append(f"  selected = {{true}}")
+    return f"@article{{{key},\n" + ",\n".join(lines) + "\n}\n"
 
-def process_single_orcid(orcid_id, token, selected_dois):
-    works = get_works_list(orcid_id, token)
-    for idx, (title, doi) in enumerate(works, 1):
-        print(f"\n[{idx}/{len(works)}] {doi}")
-        meta = get_work_metadata(doi)
-        if not meta:
-            print(f"{Colors.YELLOW}⚠️  跳过{Colors.RESET}")
-            continue
-        entry = format_bib_entry(meta, selected_dois)
-        if entry:
-            all_bib_entries.append(entry)
-        time.sleep(REQUEST_DELAY)
-
+# -----------------------------------------------------------------------------
+# 主流程
+# -----------------------------------------------------------------------------
 def main():
-    print(f"{Colors.BLUE}===== ORCID 文献抓取（先爬取→后去重→再追加） ====={Colors.RESET}")
+    print(f"{Colors.BLUE}=== ORCID 抓取 → 双重去重(DOI+标题) → 追加 google ==={Colors.RESET}")
     selected_dois = load_existing_selected_dois()
-    load_google_bib_info()
+    load_google_bib()
 
     token = get_access_token()
     if not token: return
 
-    # ========== 第一步：先完整爬取所有 ORCID 文献 ==========
-    for orcid in TARGET_ORCID_IDS:
-        process_single_orcid(orcid, token, selected_dois)
+    # 1. 先全部爬完
+    for oid in TARGET_ORCID_IDS:
+        print(f"\n{Colors.BLUE}== 处理 ORCID: {oid}{Colors.RESET}")
+        works = get_works(oid, token)
+        for i, (title, doi) in enumerate(works, 1):
+            print(f"[{i}/{len(works)}] {title[:50]}...")
+            meta = crossref_meta(doi)
+            if meta:
+                entry = format_entry(meta, selected_dois)
+                if entry:
+                    all_bib_entries.append(entry)
+            time.sleep(REQUEST_DELAY)
 
-    # ========== 第二步：比对 google，删除重复 ==========
-    print(f"\n{Colors.BLUE}🔍 开始去重：删除与 papers_google.bib 重复的文献{Colors.RESET}")
-    final_entries = []
-    for entry in all_bib_entries:
-        doi = extract_doi_from_entry(entry)
+    # 2. 双重去重：DOI 或 标题重复 → 删
+    final = []
+    for e in all_bib_entries:
+        doi, clean_title = extract_doi_and_clean_title(e)
+        is_dup = False
         if doi and doi in google_dois:
-            print(f"{Colors.YELLOW}🚫 重复已删除: {doi}{Colors.RESET}")
+            is_dup = True
+        elif clean_title and clean_title in google_clean_titles:
+            is_dup = True
+        if is_dup:
+            print(f"{Colors.YELLOW}🚫 去重：{doi or clean_title[:40]}{Colors.RESET}")
         else:
-            final_entries.append(entry)
+            final.append(e)
 
-    # ========== 第三步：写入最终文件：新文献 + google 文献 ==========
-    output_dir = os.path.dirname(OUTPUT_FILE)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-    final_text = "\n\n".join(final_entries)
+    # 3. 写入：新文献 + google
+    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
+    out = "\n\n".join(final)
     if google_bib_content.strip():
-        final_text += "\n\n" + google_bib_content
+        out += "\n\n" + google_bib_content
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        f.write(final_text)
+        f.write(out)
 
-    print(f"\n{Colors.GREEN}🎉 全部完成！{Colors.RESET}")
-    print(f"{Colors.GREEN}✅ ORCID 新文献：{len(final_entries)} 条{Colors.RESET}")
-    print(f"{Colors.GREEN}✅ 已追加 papers_google.bib{Colors.RESET}")
-    print(f"{Colors.GREEN}✅ 保存到：{OUTPUT_FILE}{Colors.RESET}")
+    print(f"\n{Colors.GREEN}🎉 完成！保留 {len(final)} 篇新文献 + 完整追加 papers_google.bib{Colors.RESET}")
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print(f"\n{Colors.YELLOW}⚠️  手动中断{Colors.RESET}")
-    except Exception as e:
-        print(f"\n{Colors.RED}❌ 错误：{e}{Colors.RESET}")
+        print(f"\n{Colors.YELLOW}⚠️ 中断{Colors.RESET}")
