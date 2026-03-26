@@ -72,9 +72,9 @@ ninja.data = [{
           description: "",
           section: "",handler: () => {
               window.location.href = "/books/pt-br/the_godfather.html";
-            },},{id: "events-课题组合照",
-          title: '课题组合照',
-          description: "课题组合照",
+            },},{id: "events-group-photo",
+          title: 'group photo',
+          description: "group photo",
           section: "",handler: () => {
               window.location.href = "/events/events1/";
             },},{id: "news-a-simple-inline-announcement",
