@@ -1,18 +1,23 @@
 ---
-layout: default # 继承你网站的默认布局
+layout: default
 ---
-<!-- 单个活动详情页 -->
+
+<!-- 纯净详情页容器，无标题、无预览模块 -->
 <div class="event-detail container my-5">
-  <!-- 活动标题 -->
-  <h1 class="text-center mb-4">{{ page.title }}</h1>
-  <!-- 活动图片 -->
-  <div class="text-center mb-4">
-    <img src="{{ page.img | relative_url }}" alt="{{ page.title }}" class="img-fluid rounded" style="max-height: 400px;">
+  <!-- 纯静态展示图片：无链接、无标题 -->
+  <div class="mb-4">
+    <img 
+      src="{{ page.img | relative_url }}" 
+      class="img-fluid rounded w-100"
+      style="object-fit: cover; max-height: 500px;"
+    >
   </div>
-  <!-- 活动日期 -->
-  <p class="text-muted text-center">📅 {{ page.date | date: "%Y-%m-%d" }}</p>
-  <!-- 活动详情内容 -->
-  <div class="mt-5">
+
+  <!-- 活动日期（可选保留，简洁展示） -->
+  <p class="text-muted mb-4">{{ page.date | date: "%Y年%m月%d日" }}</p>
+
+  <!-- 活动详情正文（MD内容） -->
+  <div class="event-content">
     {{ content }}
   </div>
 </div>
