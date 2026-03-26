@@ -72,9 +72,9 @@ ninja.data = [{
           description: "",
           section: "",handler: () => {
               window.location.href = "/books/pt-br/the_godfather.html";
-            },},{id: "events-2026春季技术交流会",
-          title: '2026春季技术交流会',
-          description: "本次活动聚焦前端技术分享",
+            },},{id: "events-课题组合照",
+          title: '课题组合照',
+          description: "课题组合照",
           section: "",handler: () => {
               window.location.href = "/events/events1/";
             },},{id: "news-a-simple-inline-announcement",
