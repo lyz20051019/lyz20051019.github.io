@@ -126,6 +126,9 @@ collections:
     output: true
   projects:
     output: true
+  events:
+    output: true
+    permalink: /events/:title/ # 活动页面访问路径
 
 # -----------------------------------------------------------------------------
 # Jekyll settings

@@ -1,0 +1,18 @@
+---
+# 活动页面布局配置
+layout: default # 继承你站点的默认布局（如base/default）
+---
+
+<!-- 活动页面主容器 -->
+<div class="events-page container mt-5 mb-5">
+  <!-- 页面标题 -->
+  <h2 class="text-center mb-4">活动中心</h2>
+  
+  <!-- 引入活动预览核心代码（你要求的events_preview.liquid） -->
+  {% include events_preview.liquid limit=true %}
+
+  <!-- 页面内容区（可选，用于活动详情页） -->
+  <div class="event-content mt-5">
+    {{ content }}
+  </div>
+</div>
