@@ -1,4 +1,8 @@
-﻿{% comment %} 1. 核心配置：使用网站默认的语言设置 {% endcomment %}
+﻿---
+layout: default
+---
+
+{% comment %} 1. 核心配置：使用网站默认的语言设置 {% endcomment %}
 {% assign is_default_lang = (site.active_lang == site.default_lang) %}
 {% comment %} 2. 分类配置：对应 _data/people.yml 的顶级key {% endcomment %}
 {% assign team_categories = "supervisor,current_members,past_members" | split: "," %}
