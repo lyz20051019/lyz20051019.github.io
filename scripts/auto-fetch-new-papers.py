@@ -11,14 +11,19 @@ from typing import Optional, Dict, List
 BASE_DIR = os.getcwd()
 ORCID_CSV = os.path.join(BASE_DIR, "scripts", "orcids.csv")
 NEWS_CSV = os.path.join(BASE_DIR, "scripts", "news.csv")
-# 过滤预印本平台DOI前缀
-FILTER_DOI_PREFIX = ["10.21203", "10.31219", "10.3389"] # 预印本/无效DOI
+# 🔥 完整版预印本/无效DOI黑名单（彻底过滤）
+FILTER_DOI_PREFIX = [
+    "10.21203",    # ResearchSquare 预印本（你多的那篇就是这个）
+    "10.26434",    # ChemRxiv
+    "10.31219",    
+    "10.3389",
+    "10.12688"
+]
 TIMEOUT = 15
 REQUEST_DELAY = 0.5
 # ====================================================
 
 orcid_authors = {}
-# 全局唯一DOI存储（彻底去重）
 unique_papers: Dict[str, dict] = {}
 
 class Log:
@@ -28,7 +33,7 @@ class Log:
     RED = "\033[91m"
     RESET = "\033[0m"
 
-# 读取作者信息
+# 读取作者信息（无修改）
 def load_authors():
     if not os.path.exists(ORCID_CSV):
         print(f"{Log.RED}❌ 未找到文件：{ORCID_CSV}{Log.RESET}")
@@ -52,7 +57,7 @@ def load_authors():
         print(f"{Log.RED}❌ 读取作者失败：{str(e)}{Log.RESET}")
         return False
 
-# 读取已有news.csv
+# 读取已有news.csv（无修改）
 def load_existing():
     if not os.path.exists(NEWS_CSV):
         print(f"{Log.YELLOW}⚠️ 新建 news.csv{Log.RESET}")
@@ -67,22 +72,19 @@ def load_existing():
     except:
         pass
 
-# 清洗+过滤DOI（彻底去重+过滤预印本）
+# 清洗+过滤DOI（无修改，更严格）
 def clean_doi(raw_doi: str) -> Optional[str]:
     if not raw_doi:
         return None
-    # 统一格式
     doi = re.sub(r"^https?://doi\.org/", "", raw_doi.strip().lower())
-    # 过滤无效/预印本DOI
     for prefix in FILTER_DOI_PREFIX:
         if doi.startswith(prefix):
             return None
-    # 过滤太短的无效DOI
     if len(doi) < 8:
         return None
     return doi
 
-# 从ORCID抓取DOI（严格去重）
+# 从ORCID抓取DOI（无修改）
 def fetch_orcid_dois(orcid: str) -> List[str]:
     url = f"https://pub.orcid.org/v3.0/{orcid}/works"
     headers = {"Accept": "application/json"}
@@ -93,13 +95,11 @@ def fetch_orcid_dois(orcid: str) -> List[str]:
         data = resp.json()
         for group in data.get("group", []):
             for work in group.get("work-summary", []):
-                # 提取DOI
                 for ext in work.get("external-ids", {}).get("external-id", []):
                     if ext.get("external-id-type") == "doi":
                         cleaned = clean_doi(ext.get("external-id-value", ""))
                         if cleaned:
                             doi_set.add(cleaned)
-                # 从链接提取
                 work_url = work.get("url", {}).get("value", "")
                 match = re.search(r"doi\.org/([0-9a-z\./-]+)", work_url, re.I)
                 if match:
@@ -113,26 +113,30 @@ def fetch_orcid_dois(orcid: str) -> List[str]:
         print(f"{Log.RED}❌ 抓取失败：{str(e)}{Log.RESET}")
         return []
 
-# 获取论文信息
+# ===================== 核心修复 =====================
+# 🔥 新增：只保留【正式期刊文章】，过滤所有非期刊文献
 def get_paper(doi: str):
     try:
         url = f"https://api.crossref.org/works/{quote(doi)}"
         msg = requests.get(url, timeout=TIMEOUT).json()["message"]
+        
+        # ✅ 强制只保留期刊文章（彻底解决多抓问题）
+        if msg.get("type") != "journal-article":
+            return None, None
+            
         title = msg.get("title", ["未知标题"])[0]
         journal = msg.get("container-title", ["未知期刊"])[0]
-        # 去除html标签
         title = re.sub(r"<[^>]+>", "", title)
         journal = re.sub(r"<[^>]+>", "", journal)
         return title, journal
     except:
-        return "未知标题", "未知期刊"
+        return None, None
 
-# 处理单篇论文（合并作者+唯一存储）
+# 处理单篇论文（修复：过滤无效论文）
 def process_paper(orcid: str, doi: str):
     author = orcid_authors[orcid]
     name, en_name = author["name"], author["en_name"]
 
-    # 已存在：仅合并作者
     if doi in unique_papers:
         row = unique_papers[doi]
         if name and name not in row["name"]:
@@ -142,9 +146,12 @@ def process_paper(orcid: str, doi: str):
         unique_papers[doi] = row
         return
 
-    # 新论文：新增
-    fetch_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # ✅ 无效论文直接跳过
     title, journal = get_paper(doi)
+    if not title or not journal:
+        return
+
+    fetch_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     unique_papers[doi] = {
         "fetch_time": fetch_time,
         "orcid_id": orcid,
@@ -155,7 +162,7 @@ def process_paper(orcid: str, doi: str):
         "en_name": en_name
     }
 
-# 保存文件
+# 保存文件（无修改）
 def save_csv():
     os.makedirs(os.path.dirname(NEWS_CSV), exist_ok=True)
     fields = ["fetch_time", "orcid_id", "doi", "title", "journal", "name", "en_name"]
@@ -166,7 +173,7 @@ def save_csv():
     print(f"\n{Log.GREEN}🎉 最终有效论文：{len(unique_papers)} 篇{Log.RESET}")
     print(f"{Log.GREEN}✅ 文件已保存：scripts/news.csv{Log.RESET}")
 
-# 主流程
+# 主流程（无修改）
 def main():
     print(f"{Log.BLUE}===== ORCID 论文自动更新（去重+过滤预印本）====={Log.RESET}")
     load_existing()
