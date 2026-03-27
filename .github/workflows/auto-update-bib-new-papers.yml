@@ -1,0 +1,71 @@
+﻿name: Auto Update BibTeX from ORCID
+
+on:
+  schedule:
+    - cron: '0 18 * * *'  # UTC 18点 = 北京时间 2点
+  workflow_dispatch:      # 允许手动触发
+
+jobs:
+  update-bib:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # 【关键修改 1】：在这里直接注入 PAT_TOKEN
+          # 这样整个 git 环境的凭证就变成了你的 PAT，后续 push 会自动触发其他工作流
+          token: ${{ secrets.PAT_TOKEN }} 
+
+      - name: Set up Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run ORCID new papers update script
+        run: python scripts/auto-fetch-new-papers.py
+        continue-on-error: false
+        env:
+          ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+          ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+
+      - name: Check for changes in news.csv
+        id: check_changes
+        run: |
+          if git diff --quiet scripts/news.csv; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "✅ No changes to news.csv"
+
+          else
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "🔄 Detected changes to news.csv"
+          fi
+
+      - name: Configure Git user
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Commit and push updated papers.bib
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git add _bibliography/papers.bib
+          git commit -m "chore: auto-update news.csv $(date +'%Y-%m-%d %H:%M:%S')"
+          # 【关键修改 2】：因为 checkout 已经配置了 PAT，这里直接 push 即可，非常干净
+          git push origin main
+          
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Auto-update script failed! Check the logs for details."
