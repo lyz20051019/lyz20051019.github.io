@@ -7,140 +7,151 @@ from datetime import datetime
 from urllib.parse import quote
 from typing import Optional, Dict, List
 
-# ================= 配置区域 =================
-CLIENT_ID = os.getenv("ORCID_CLIENT_ID")
-CLIENT_SECRET = os.getenv("ORCID_CLIENT_SECRET")
-ORCID_CSV = "./scripts/orcids.csv"
-NEWS_CSV = "./scripts/news.csv"
-TIMEOUT = 15
+# ===================== 核心配置 =====================
+# 环境变量读取 ORCID 凭据
+CLIENT_ID = os.getenv("ORCID_CLIENT_ID", "")
+CLIENT_SECRET = os.getenv("ORCID_SECRET", "")
+# 文件路径（固定路径，确保生成在 scripts 目录下）
+BASE_DIR = os.getcwd()
+ORCID_CSV = os.path.join(BASE_DIR, "scripts", "orcids.csv")
+NEWS_CSV = os.path.join(BASE_DIR, "scripts", "news.csv")
+# 请求配置
+TIMEOUT = 20
 REQUEST_DELAY = 1
-# ============================================
+# ====================================================
 
-# 全局存储
-orcid_info_map: Dict[str, Dict[str, str]] = {}
-existing_news: Dict[str, Dict] = {}
+# 全局数据存储
+orcid_authors = {}  # ORCID -> 作者信息
+paper_records = {}  # DOI -> 论文记录
 
-class Colors:
+class Log:
+    """日志美化"""
+    BLUE = "\033[94m"
     GREEN = "\033[92m"
     YELLOW = "\033[93m"
     RED = "\033[91m"
-    BLUE = "\033[94m"
     RESET = "\033[0m"
 
-# -----------------------------------------------------------------------------
-# 🔥 彻底修复：容错读取CSV，无视隐藏字符/空格/BOM
-# -----------------------------------------------------------------------------
-def load_orcid_authors():
+# --------------------- 1. 读取作者CSV ---------------------
+def load_authors():
+    """容错读取 orcids.csv，支持中文、特殊字符"""
     if not os.path.exists(ORCID_CSV):
-        print(f"{Colors.RED}❌ 未找到 {ORCID_CSV}{Colors.RESET}")
+        print(f"{Log.RED}❌ 未找到文件：{ORCID_CSV}{Log.RESET}")
         return False
-    
+
     try:
-        # 兼容所有编码、隐藏字符、空格
         with open(ORCID_CSV, "r", encoding="utf-8-sig") as f:
             lines = [line.strip() for line in f if line.strip()]
         
-        # 第一行表头：自动去除空格，兼容格式
         headers = [col.strip() for col in lines[0].split(",")]
-        # 数据行
         for line in lines[1:]:
-            values = [val.strip() for val in line.split(",")]
+            values = [v.strip() for v in line.split(",")]
             row = dict(zip(headers, values))
-            
             orcid = row.get("orcid", "")
-            name = row.get("name", "")
-            en_name = row.get("en_name", "")
-            
             if orcid:
-                orcid_info_map[orcid] = {"name": name, "en_name": en_name}
-        
-        print(f"{Colors.GREEN}✅ 加载 {len(orcid_info_map)} 个 ORCID 信息{Colors.RESET}")
+                orcid_authors[orcid] = {
+                    "name": row.get("name", ""),
+                    "en_name": row.get("en_name", "")
+                }
+        print(f"{Log.GREEN}✅ 成功加载 {len(orcid_authors)} 位作者{Log.RESET}")
         return True
     except Exception as e:
-        print(f"{Colors.RED}❌ CSV读取失败：{str(e)}{Colors.RESET}")
+        print(f"{Log.RED}❌ 读取作者失败：{str(e)}{Log.RESET}")
         return False
 
-# -----------------------------------------------------------------------------
-# 读取已存在的news.csv
-# -----------------------------------------------------------------------------
-def load_existing_news():
+# --------------------- 2. 读取已有论文数据 ---------------------
+def load_existing_papers():
+    """加载已存在的 news.csv，无文件则跳过"""
     if not os.path.exists(NEWS_CSV):
+        print(f"{Log.YELLOW}⚠️ news.csv 不存在，将新建文件{Log.RESET}")
         return
+    
     try:
         with open(NEWS_CSV, "r", encoding="utf-8-sig") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 doi = row["doi"].strip().lower()
-                existing_news[doi] = row
-    except Exception:
-        pass
+                paper_records[doi] = row
+        print(f"{Log.GREEN}✅ 加载已有论文：{len(paper_records)} 篇{Log.RESET}")
+    except Exception as e:
+        print(f"{Log.YELLOW}⚠️ 读取旧文件失败：{str(e)}{Log.RESET}")
 
-# -----------------------------------------------------------------------------
-# ORCID API
-# -----------------------------------------------------------------------------
-def get_access_token() -> Optional[str]:
-    url = "https://orcid.org/oauth/token"
-    headers = {"Accept": "application/json"}
-    data = {
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
-        "grant_type": "client_credentials",
-        "scope": "/read-public"
-    }
-    try:
-        r = requests.post(url, headers=headers, data=data, timeout=TIMEOUT)
-        r.raise_for_status()
-        return r.json()["access_token"]
-    except Exception:
-        print(f"{Colors.RED}❌ Token 获取失败{Colors.RESET}")
-        return None
-
-def get_orcid_dois(orcid: str, token: str) -> List[str]:
+# --------------------- 3. ORCID 抓取 DOI（终极修复版） ---------------------
+def get_orcid_dois(orcid: str) -> List[str]:
+    """
+    从 ORCID 抓取所有 DOI
+    支持：标准DOI字段 + URL中的DOI + 全量work遍历
+    公开接口，无需TOKEN也能访问
+    """
     url = f"https://pub.orcid.org/v3.0/{orcid}/works"
-    headers = {"Accept": "application/json", "Authorization": f"Bearer {token}"}
-    dois = []
+    headers = {"Accept": "application/json"}
+    dois = set()
+
     try:
-        data = requests.get(url, headers=headers, timeout=TIMEOUT).json()
-        for g in data.get("group", []):
-            ws = g.get("work-summary", [])
-            if not ws: continue
-            for ext in ws[0].get("external-ids", {}).get("external-id", []):
-                if ext["external-id-type"] == "doi":
-                    doi = re.sub(r"^https?://doi\.org/", "", ext["external-id-value"]).lower()
-                    dois.append(doi)
-                    break
-        return list(set(dois))
-    except Exception:
+        resp = requests.get(url, headers=headers, timeout=TIMEOUT)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # 遍历所有论文组
+        for group in data.get("group", []):
+            # 遍历所有工作记录（不只是第一条）
+            for work in group.get("work-summary", []):
+                # 方式1：提取标准 DOI 字段
+                for ext_id in work.get("external-ids", {}).get("external-id", []):
+                    if ext_id.get("external-id-type") == "doi":
+                        raw_doi = ext_id.get("external-id-value", "").strip()
+                        clean_doi = re.sub(r"^https?://doi\.org/", "", raw_doi, flags=re.I).lower()
+                        if clean_doi:
+                            dois.add(clean_doi)
+
+                # 方式2：从论文链接中提取 DOI（作者未填写DOI但填了链接）
+                work_url = work.get("url", {}).get("value", "")
+                if work_url:
+                    match = re.search(r"doi\.org/([0-9a-zA-Z\./-]+)", work_url, re.I)
+                    if match:
+                        dois.add(match.group(1).lower())
+
+        result = list(dois)
+        print(f"{Log.BLUE}🔍 ORCID {orcid} 抓取到 {len(result)} 个 DOI{Log.RESET}")
+        return result
+
+    except Exception as e:
+        print(f"{Log.RED}❌ 抓取 ORCID 失败：{str(e)}{Log.RESET}")
         return []
 
-def get_paper_info(doi):
+# --------------------- 4. 获取论文标题/期刊 ---------------------
+def get_paper_detail(doi: str):
+    """通过 CrossRef API 获取论文信息，失败返回默认值"""
     try:
         url = f"https://api.crossref.org/works/{quote(doi)}"
-        data = requests.get(url, timeout=10).json()["message"]
-        return data.get("title", ["未知标题"])[0], data.get("container-title", ["未知期刊"])[0]
-    except Exception:
+        data = requests.get(url, timeout=TIMEOUT).json()["message"]
+        title = data.get("title", ["未知标题"])[0]
+        journal = data.get("container-title", ["未知期刊"])[0]
+        return title, journal
+    except:
         return "未知标题", "未知期刊"
 
-# -----------------------------------------------------------------------------
-# 处理文章：合并作者 + 保留首次时间
-# -----------------------------------------------------------------------------
-def process_article(orcid, doi, name, en_name):
-    if doi in existing_news:
-        row = existing_news[doi]
-        # 合并中文名（去重）
-        if name and name not in row["name"]:
-            row["name"] = f"{row['name']},{name}" if row["name"] else name
-        # 合并英文名（去重）
-        if en_name and en_name not in row["en_name"]:
-            row["en_name"] = f"{row['en_name']},{en_name}" if row["en_name"] else en_name
-        existing_news[doi] = row
+# --------------------- 5. 合并/新增论文 ---------------------
+def process_paper(orcid: str, doi: str):
+    """处理单篇论文：新增/合并作者"""
+    author = orcid_authors[orcid]
+    name = author["name"]
+    en_name = author["en_name"]
+
+    # 论文已存在 → 合并作者
+    if doi in paper_records:
+        record = paper_records[doi]
+        if name and name not in record["name"]:
+            record["name"] = f"{record['name']},{name}" if record["name"] else name
+        if en_name and en_name not in record["en_name"]:
+            record["en_name"] = f"{record['en_name']},{en_name}" if record["en_name"] else en_name
+        paper_records[doi] = record
         return
 
-    # 新文章：记录时间
-    fetch_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    title, journal = get_paper_info(doi)
-    existing_news[doi] = {
-        "fetch_time": fetch_time,
+    # 论文不存在 → 新增记录
+    title, journal = get_paper_detail(doi)
+    paper_records[doi] = {
+        "fetch_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "orcid_id": orcid,
         "doi": doi,
         "title": title,
@@ -149,46 +160,44 @@ def process_article(orcid, doi, name, en_name):
         "en_name": en_name
     }
 
-# -----------------------------------------------------------------------------
-# 保存文件
-# -----------------------------------------------------------------------------
-def save_news():
+# --------------------- 6. 保存文件（强制生成） ---------------------
+def save_csv():
+    """强制生成 news.csv，哪怕没有数据也创建表头"""
+    os.makedirs(os.path.dirname(NEWS_CSV), exist_ok=True)
+
+    fields = ["fetch_time", "orcid_id", "doi", "title", "journal", "name", "en_name"]
     with open(NEWS_CSV, "w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=[
-            "fetch_time", "orcid_id", "doi", "title", "journal", "name", "en_name"
-        ])
+        writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
-        writer.writerows(existing_news.values())
+        writer.writerows(paper_records.values())
 
-# -----------------------------------------------------------------------------
-# 主流程
-# -----------------------------------------------------------------------------
+    print(f"{Log.GREEN}🎉 文件保存成功：{NEWS_CSV}{Log.RESET}")
+    print(f"{Log.GREEN}📊 总计论文：{len(paper_records)} 篇{Log.RESET}")
+
+# --------------------- 主函数 ---------------------
 def main():
-    print(f"{Colors.BLUE}=== ORCID 文章自动更新 ==={Colors.RESET}")
-    load_existing_news()
+    print(f"{Log.BLUE}===== ORCID 论文自动更新工具 ====={Log.RESET}")
     
-    if not load_orcid_authors():
+    # 初始化
+    load_existing_papers()
+    if not load_authors():
         return
 
-    token = get_access_token()
-    if not token:
-        return
-
-    for orcid, info in orcid_info_map.items():
-        name = info["name"]
-        en_name = info["en_name"]
-        print(f"\n{Colors.BLUE}处理：{orcid} | {name} ({en_name}){Colors.RESET}")
+    # 遍历所有作者抓取论文
+    for orcid in orcid_authors:
+        author = orcid_authors[orcid]
+        print(f"\n{Log.BLUE}──────── 处理：{author['name']} ({author['en_name']}) {orcid}{Log.RESET}")
         
-        dois = get_orcid_dois(orcid, token)
+        dois = get_orcid_dois(orcid)
         for doi in dois:
-            process_article(orcid, doi, name, en_name)
+            process_paper(orcid, doi)
             time.sleep(REQUEST_DELAY)
 
-    save_news()
-    print(f"{Colors.GREEN}🎉 完成！共 {len(existing_news)} 条记录{Colors.RESET}")
+    # 保存结果
+    save_csv()
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print(f"\n中断")
+        print(f"\n{Log.YELLOW}⚠️ 程序手动终止{Log.RESET}")
