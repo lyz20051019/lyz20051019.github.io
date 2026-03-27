@@ -9,14 +9,28 @@ from typing import Dict, List, Optional, Tuple
 # ================= 配置区域 =================
 CLIENT_ID = os.getenv("ORCID_CLIENT_ID")
 CLIENT_SECRET = os.getenv("ORCID_CLIENT_SECRET")
-TARGET_ORCID_IDS = [
-    "0000-0003-4717-2814",
-    "0000-0003-2075-366X"
-]
 OUTPUT_FILE = "./_bibliography/papers.bib"
+CSV_PATH = "./scripts/orcids.csv"
 LIMIT_PER_ORCID = 0
 TIMEOUT = 15
 REQUEST_DELAY = 1
+
+def load_orcids_from_csv(csv_file):
+    orcids = []
+    if not os.path.exists(csv_file):
+        print(f"{Colors.RED}❌ ORCID文件不存在：{csv_file}{Colors.RESET}")
+        return orcids
+    with open(csv_file, "r", encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            if "orcid" in row and row["orcid"].strip():
+                orcids.append(row["orcid"].strip())
+    print(f"{Colors.GREEN}✅ 从文件加载 ORCID：{len(orcids)} 个{Colors.RESET}")
+    return orcids
+
+# 加载ORCID列表
+TARGET_ORCID_IDS = load_orcids_from_csv(CSV_PATH)
+
 # ============================================
 
 class Colors:
