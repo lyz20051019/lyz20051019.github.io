@@ -10,3 +10,7 @@ title: group photo
 # 可选：活动描述（详情页用）
 description: group photo
 ---
+
+<p align="center">
+  <img src="/assets/img/events/event-02.jpg" alt="课题组合影" width="80%">
+</p>
