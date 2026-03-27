@@ -3,6 +3,7 @@ import json
 import time
 import os
 import re
+import csv
 from urllib.parse import quote
 from typing import Dict, List, Optional, Tuple
 
