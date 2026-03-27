@@ -26,7 +26,7 @@ def load_orcids_from_csv(csv_file):
         for row in reader:
             if "orcid" in row and row["orcid"].strip():
                 orcids.append(row["orcid"].strip())
-    print(f"{Colors.GREEN}✅ 从文件加载 ORCID：{len(orcids)} 个{Colors.RESET}")
+    print(f"{Colors.GREEN}✅ 从文件加载 ORCID：{len(orcids)} 个")
     return orcids
 
 # 加载ORCID列表
