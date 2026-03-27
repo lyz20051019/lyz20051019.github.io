@@ -1,4 +1,4 @@
-﻿name: Auto Update BibTeX from ORCID
+﻿name: Auto Update news.csv from ORCID
 
 on:
   schedule:
