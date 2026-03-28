@@ -60,6 +60,7 @@ def load_unique_papers() -> List[Dict]:
         print(f"❌ 未找到CSV文件：{CSV_PATH}")
         return unique_papers
 
+    # 编码：utf-8-sig 兼容Windows导出的CSV带BOM的情况
     with open(CSV_PATH, "r", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         for row in reader:
@@ -78,6 +79,7 @@ def load_template(template_path: str) -> str:
     if not os.path.exists(template_path):
         print(f"❌ 未找到模板：{template_path}")
         return ""
+    # 强制UTF-8读取模板
     with open(template_path, "r", encoding="utf-8") as f:
         return f.read()
 
@@ -115,9 +117,9 @@ def render_and_save(paper: Dict, template: str, output_dir: str, lang: str):
         placeholder = f"{{{key}}}"
         content = content.replace(placeholder, str(value))
 
-    # 写入文件
+    # 写入文件：强制UTF-8编码，无BOM，保证跨平台兼容
     os.makedirs(output_dir, exist_ok=True)
-    with open(output_path, "w", encoding="utf-8") as f:
+    with open(output_path, "w", encoding="utf-8", newline="") as f:
         f.write(content)
     
     print(f"✅ [{lang}] 生成成功：{filename}")
