@@ -6,8 +6,8 @@ from typing import Dict, List
 # CSV文件路径
 CSV_PATH = "scripts/news.csv"
 # 模板文件路径
-TEMPLATE_ZH = "news-zh-cn.md"
-TEMPLATE_EN = "news-en-us.md"
+TEMPLATE_ZH = "scripts/news-zh-cn.md"
+TEMPLATE_EN = "scripts/news-en-us.md"
 # 输出根目录
 OUTPUT_ROOT = "./_news"
 OUTPUT_ZH_DIR = os.path.join(OUTPUT_ROOT, "zh-cn")
