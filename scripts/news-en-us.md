@@ -1,9 +1,12 @@
 ---
 layout: post
-title: 祝贺{en_name}在《{journal}》上发表了论文《{title}》！
+title: Congratulations to {en_name} for publishing the paper {title} in {journal}!
 date: {fetch_time}
 inline: false
 related_posts: false
 ---
-# 祝贺{en_name}在《{journal}》上发表了论文《{title}》！
+
+
+
+Congratulations to {en_name} for publishing the paper *{title}* in *{journal}*!
 DOI: {doi}

@@ -12,27 +12,24 @@ OUTPUT_ZH_DIR = os.path.join(OUTPUT_ROOT, "zh-cn")
 OUTPUT_EN_DIR = os.path.join(OUTPUT_ROOT, "en-us")
 # ====================================================
 
-# 🔥 核心修复：清洗 Jekyll 不兼容的 HTML 标签 / 特殊符号
-def clean_jekyll_text(text: str) -> str:
+# 🔥 仅移除 HTML 标签，保留所有文字/符号/化学公式
+def clean_html_tags(text: str) -> str:
     if not text:
         return ""
-    # 1. 移除所有 HTML 标签（<i> <sup> 等，Front Matter 禁止使用）
-    text = re.sub(r'<[^>]+>', '', text)
-    # 2. 替换特殊化学符号为纯文本兼容格式
-    text = text.replace("sp(3)", "sp3")
-    text = text.replace("η6", "eta6")
-    # 3. 全角符号转半角
-    text = text.replace("，", ",")
-    text = text.replace("！", "!")
-    # 4. 移除 YAML 不兼容的特殊字符
-    text = text.replace(":", " -").replace("{", "").replace("}", "")
-    return text.strip()
+    # 只删除 <xxx> 格式的HTML标签，其余内容完全保留
+    return re.sub(r'<[^>]+>', '', text).strip()
+
+# 🔥 Jekyll YAML安全处理：给标题加双引号，解决冒号/特殊字符导致的解析崩溃
+def yaml_safe_title(text: str) -> str:
+    text = clean_html_tags(text)
+    # 用双引号包裹标题，彻底解决YAML语法冲突（核心修复）
+    return f'"{text}"'
 
 def format_publish_time(year: str, month: str, date: str) -> str:
     try:
         y = int(year.strip()) if year.strip() else 0
         m = int(month.strip()) if month.strip() else 0
-        d = int(date.strip()) if date.strip() else 0
+        d = int(date.strip()) if month.strip() else 0
     except:
         return ""
     time_parts = []
@@ -91,30 +88,35 @@ def render_and_save(paper: Dict, template: str, output_dir: str, lang: str):
         paper.get("date", "0")
     )
 
-    # 🔥 关键修复：给 Front Matter 的 title 清洗 HTML 标签（不修改原标题）
+    # ===================== 核心修复 =====================
     raw_title = paper.get("title", "")
-    jekyll_title = clean_jekyll_text(raw_title)
-    
+    # 1. Front Matter用：YAML安全标题（去HTML+引号包裹）
+    safe_front_title = yaml_safe_title(raw_title)
+    # 2. 正文用：仅去HTML，保留所有符号
+    safe_body_title = clean_html_tags(raw_title)
+
+    # 替换模板
     content = template
     content = content.replace("{time}", publish_time)
-    # 渲染纯文本安全标题到 Front Matter
-    content = content.replace("{title}", jekyll_title)
-    # 渲染其他字段
+    # 修复：分开渲染标题（解决YAML崩溃）
+    content = content.replace('title: {title}', f'title: {safe_front_title}')
+    content = content.replace('# {title}', f'# {safe_body_title}')
+    # 替换其余字段
     for key, value in paper.items():
         if key == "title":
             continue
         placeholder = f"{{{key}}}"
         content = content.replace(placeholder, str(value))
 
+    # 严格UTF-8写入
     os.makedirs(output_dir, exist_ok=True)
-    # 强制 UTF-8 无 BOM 写入，Jekyll 标准编码
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(content.strip())
     
     print(f"✅ [{lang}] 生成成功：{filename}")
 
 def main():
-    print("===== 自动生成新闻Markdown文件（Jekyll兼容版）=====")
+    print("===== 自动生成新闻Markdown（Jekyll完美兼容版）=====")
     
     papers = load_unique_papers()
     if not papers:
@@ -129,7 +131,7 @@ def main():
         if template_en:
             render_and_save(paper, template_en, OUTPUT_EN_DIR, "英文")
 
-    print("\n🎉 所有文件处理完成！Jekyll 解析兼容已修复")
+    print("\n🎉 所有文件处理完成！Jekyll构建正常，符号完整保留")
 
 if __name__ == "__main__":
     main()
