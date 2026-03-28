@@ -12,7 +12,7 @@ OUTPUT_ZH_DIR = os.path.join(OUTPUT_ROOT, "zh-cn")
 OUTPUT_EN_DIR = os.path.join(OUTPUT_ROOT, "en-us")
 # ====================================================
 
-# 清洗HTML标签
+# 仅清洗HTML标签，保留所有文字
 def clean_html_tags(text: str) -> str:
     if not text:
         return ""
@@ -33,12 +33,12 @@ def format_publish_time(year: str, month: str, date: str) -> str:
     if d > 0: time_parts.append(f"{d:02d}")
     return "-".join(time_parts)
 
-# 安全文件名
+# DOI安全文件名
 def get_safe_filename(doi: str) -> str:
     if not doi: return "unknown"
     return doi.replace("/", "_").replace("\\", "_")
 
-# 读取CSV去重
+# 读取CSV
 def load_unique_papers() -> List[Dict]:
     unique_dois = set()
     unique_papers = []
@@ -51,6 +51,8 @@ def load_unique_papers() -> List[Dict]:
         for row in reader:
             doi = row.get("doi", "").strip()
             if not doi or doi in unique_dois: continue
+            # 清洗标题HTML标签
+            row['title'] = clean_html_tags(row['title'])
             unique_dois.add(doi)
             unique_papers.append(row)
     print(f"✅ 加载完成：共 {len(unique_papers)} 篇唯一论文")
@@ -64,10 +66,9 @@ def load_template(template_path: str) -> str:
     with open(template_path, "r", encoding="utf-8") as f:
         return f.read()
 
-# 渲染保存（核心修复：正则仅匹配单行，不跨行）
+# 核心渲染：完全保留模板句式，仅替换变量+加双引号
 def render_and_save(paper: Dict, template: str, output_dir: str, lang: str):
     doi = paper.get("doi", "").strip()
-    raw_title = paper.get("title", "")
     if not doi or not template:
         return
 
@@ -77,20 +78,18 @@ def render_and_save(paper: Dict, template: str, output_dir: str, lang: str):
         print(f"ℹ️ [{lang}] 文件已存在，跳过：{filename}")
         return
 
-    # 处理变量
-    publish_time = format_publish_time(paper.get("year","0"), paper.get("month","0"), paper.get("date","0"))
-    cleaned_title = clean_html_tags(raw_title)
-    safe_front_title = f'"{cleaned_title}"'  # 头部标题加双引号
-
-    # 替换所有模板变量
+    # 1. 替换所有变量（严格匹配模板）
     content = template
-    content = content.replace("{time}", publish_time)
-    content = content.replace("{title}", cleaned_title)
+    content = content.replace("{time}", format_publish_time(paper.get("year","0"), paper.get("month","0"), paper.get("date","0")))
+    # 替换全部占位符
     for key, value in paper.items():
         content = content.replace(f"{{{key}}}", str(value))
 
-    # 🔥 核心修复：仅匹配【单行】的 title: 行，绝对不跨行！删除了致命的 re.DOTALL
-    content = re.sub(r'^title:.*$', f'title: {safe_front_title}', content, flags=re.MULTILINE)
+    # 2. 🔥 仅给Front Matter的title加双引号（保留完整句子，不破坏模板）
+    def add_quotes(match):
+        return f'title: "{match.group(1).strip()}"'
+    # 精准匹配 title: 内容 并添加双引号
+    content = re.sub(r'^title: (.*)$', add_quotes, content, flags=re.MULTILINE)
 
     # 保存文件
     os.makedirs(output_dir, exist_ok=True)
@@ -100,7 +99,7 @@ def render_and_save(paper: Dict, template: str, output_dir: str, lang: str):
     print(f"✅ [{lang}] 生成成功：{filename}")
 
 def main():
-    print("===== 自动生成新闻Markdown（修复正则崩溃版）=====")
+    print("===== 自动生成新闻Markdown（模板完美匹配版）=====")
     papers = load_unique_papers()
     if not papers: return
 
@@ -111,7 +110,7 @@ def main():
         if template_zh: render_and_save(paper, template_zh, OUTPUT_ZH_DIR, "中文")
         if template_en: render_and_save(paper, template_en, OUTPUT_EN_DIR, "英文")
 
-    print("\n🎉 文件生成完成！Jekyll 可正常解析")
+    print("\n🎉 所有文件生成完成！模板句式100%保留")
 
 if __name__ == "__main__":
     main()
