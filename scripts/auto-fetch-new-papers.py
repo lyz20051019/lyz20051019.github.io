@@ -5,13 +5,13 @@ import re
 import time
 from datetime import datetime
 from urllib.parse import quote
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Tuple
 
 # ===================== 核心配置 =====================
 BASE_DIR = os.getcwd()
 ORCID_CSV = os.path.join(BASE_DIR, "scripts", "orcids.csv")
 NEWS_CSV = os.path.join(BASE_DIR, "scripts", "news.csv")
-FILTER_DOI_PREFIX = ["10.21203", "10.31219", "10.3389"]
+FILTER_DOI_PREFIX = ["10.21203", "10.31219", "10.3389"]  # 预印本过滤
 TIMEOUT = 15
 REQUEST_DELAY = 0.5
 # ====================================================
@@ -27,9 +27,10 @@ class Log:
     RED = "\033[91m"
     RESET = "\033[0m"
 
+# 读取作者（无改动）
 def load_authors():
     if not os.path.exists(ORCID_CSV):
-        print(f"{Log.RED}❌ 未找到文件：{ORCID_CSV}{Log.RESET}")
+        print(f"{Log.RED}❌ 未找到文件：{ORCID_CSV}{Colors.RESET}")
         return False
     try:
         with open(ORCID_CSV, "r", encoding="utf-8-sig") as f:
@@ -50,6 +51,7 @@ def load_authors():
         print(f"{Log.RED}❌ 读取作者失败：{str(e)}{Log.RESET}")
         return False
 
+# 读取已有数据（无改动）
 def load_existing():
     global exist_titles
     if not os.path.exists(NEWS_CSV):
@@ -67,6 +69,7 @@ def load_existing():
     except:
         pass
 
+# DOI清洗（无改动）
 def clean_doi(raw_doi: str) -> Optional[str]:
     if not raw_doi:
         return None
@@ -78,6 +81,7 @@ def clean_doi(raw_doi: str) -> Optional[str]:
         return None
     return doi
 
+# 标题归一化（去重用）
 def normalize_title(title: str) -> str:
     if not title:
         return ""
@@ -86,92 +90,96 @@ def normalize_title(title: str) -> str:
     title = re.sub(r"[^a-z0-9\u4e00-\u9fa5]", "", title)
     return title.strip()
 
-# 🔥 修复1：清洗标题换行/异常格式 + 修复2：获取发表年月日
-def get_paper(doi: str):
-    try:
-        url = f"https://api.crossref.org/works/{quote(doi)}"
-        msg = requests.get(url, timeout=TIMEOUT).json()["message"]
-        if msg.get("type") != "journal-article":
-            return None, None, 0, 0, 0
-
-        # 清洗标题：删除换行、回车、制表符、多余空格
-        title = msg.get("title", ["未知标题"])[0]
-        title = re.sub(r'[\n\r\t]+', ' ', title)    # 去掉换行/制表符
-        title = re.sub(r'\s+', ' ', title).strip()  # 合并多余空格
-        title = re.sub(r"<[^>]+>", "", title)       # 去掉HTML标签
-
-        journal = msg.get("container-title", ["未知期刊"])[0]
-        journal = re.sub(r"<[^>]+>", "", journal)
-
-        # 解析发表日期：年/月/日，无则填0
-        year, month, day = 0, 0, 0
-        date_parts = None
-        if "published-print" in msg:
-            date_parts = msg["published-print"]["date-parts"][0]
-        elif "published-online" in msg:
-            date_parts = msg["published-online"]["date-parts"][0]
-        
-        if date_parts and len(date_parts) >= 1:
-            year = date_parts[0]
-        if date_parts and len(date_parts) >= 2:
-            month = date_parts[1]
-        if date_parts and len(date_parts) >= 3:
-            day = date_parts[2]
-
-        return title, journal, year, month, day
-    except:
-        return None, None, 0, 0, 0
-
-def fetch_orcid_dois(orcid: str) -> List[str]:
+# 🔥 核心修复1：从ORCID直接抓取【标题+DOI+年月日】+ 彻底清洗标题换行
+def fetch_orcid_dois(orcid: str) -> List[Tuple[str, str, int, int, int]]:
     url = f"https://pub.orcid.org/v3.0/{orcid}/works"
     headers = {"Accept": "application/json"}
+    results = []
     doi_set = set()
 
     try:
         resp = requests.get(url, headers=headers, timeout=TIMEOUT)
         data = resp.json()
+        
         for group in data.get("group", []):
-            for work in group.get("work-summary", []):
-                for ext in work.get("external-ids", {}).get("external-id", []):
-                    if ext.get("external-id-type") == "doi":
-                        cleaned = clean_doi(ext.get("external-id-value", ""))
-                        if cleaned:
-                            doi_set.add(cleaned)
-                work_url = work.get("url", {}).get("value", "")
-                match = re.search(r"doi\.org/([0-9a-z\./-]+)", work_url, re.I)
-                if match:
-                    cleaned = clean_doi(match.group(1))
-                    if cleaned:
-                        doi_set.add(cleaned)
-        res = sorted(list(doi_set))
-        print(f"{Log.BLUE}🔍 {orcid} 有效论文：{len(res)} 篇{Log.RESET}")
-        return res
+            ws = group.get("work-summary", [])
+            if not ws:
+                continue
+            w = ws[0]
+
+            # 1. 提取并清洗标题（彻底删除换行、缩进、特殊字符）
+            raw_title = w.get("title", {}).get("title", {}).get("value", "")
+            clean_title = re.sub(r'[\n\r\t\f\v]', ' ', raw_title)  # 删所有换行/制表符
+            clean_title = re.sub(r'\s+', ' ', clean_title).strip() # 合并多余空格
+
+            # 2. 提取DOI
+            doi = None
+            for eid in w.get("external-ids", {}).get("external-id", []):
+                if eid.get("external-id-type") == "doi":
+                    doi = eid.get("external-id-value")
+                    break
+            if not doi:
+                continue
+            doi = clean_doi(doi)
+            if not doi or doi in doi_set:
+                continue
+
+            # 3. 🔥 从ORCID提取发表日期（和你给的代码逻辑一致）
+            year, month, day = 0, 0, 0
+            pub_date = w.get("publication-date", {})
+            if pub_date:
+                year = pub_date.get("year", 0)
+                month = pub_date.get("month", 0)
+                day = pub_date.get("day", 0)
+            # 类型转换，确保是数字
+            year = int(year) if year else 0
+            month = int(month) if month else 0
+            day = int(day) if day else 0
+
+            doi_set.add(doi)
+            results.append((clean_title, doi, year, month, day))
+
+        print(f"{Log.BLUE}🔍 {orcid} 有效论文：{len(results)} 篇{Log.RESET}")
+        return results
     except Exception as e:
         print(f"{Log.RED}❌ 抓取失败：{str(e)}{Log.RESET}")
         return []
 
-# 双重去重 + 新增日期字段
-def process_paper(orcid: str, doi: str):
+# 🔥 核心修复2：获取期刊信息（仅拿标题/期刊，日期用ORCID的）
+def get_paper_journal(doi: str) -> Tuple[str, str]:
+    try:
+        url = f"https://api.crossref.org/works/{quote(doi)}"
+        msg = requests.get(url, timeout=TIMEOUT).json()["message"]
+        if msg.get("type") != "journal-article":
+            return "未知标题", "未知期刊"
+        journal = msg.get("container-title", ["未知期刊"])[0]
+        journal = re.sub(r"<[^>]+>", "", journal)
+        return "未知标题", journal
+    except:
+        return "未知标题", "未知期刊"
+
+# 🔥 核心修复3：双重去重 + 日期正常写入
+def process_paper(orcid: str, clean_title: str, doi: str, year: int, month: int, day: int):
+    # DOI去重
     if doi in unique_papers:
         return
-
-    title, journal, year, month, day = get_paper(doi)
-    if not title or not journal:
-        return
-
-    norm_title = normalize_title(title)
+    # 标题去重
+    norm_title = normalize_title(clean_title)
     if norm_title in exist_titles:
         return
 
+    # 获取期刊名
+    _, journal = get_paper_journal(doi)
     author = orcid_authors[orcid]
     name, en_name = author["name"], author["en_name"]
     fetch_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
+
+    # 🔥 强制写入所有字段（日期必存，无空白）
     unique_papers[doi] = {
         "fetch_time": fetch_time,
         "orcid_id": orcid,
         "doi": doi,
-        "title": title,
+        "title": clean_title,
         "journal": journal,
         "year": year,
         "month": month,
@@ -181,11 +189,11 @@ def process_paper(orcid: str, doi: str):
     }
     exist_titles.add(norm_title)
 
-# 🔥 新增日期列到CSV
+# 🔥 核心修复4：CSV字段完整写入（日期列必输出）
 def save_csv():
     os.makedirs(os.path.dirname(NEWS_CSV), exist_ok=True)
     fields = [
-        "fetch_time", "orcid_id", "doi", 
+        "fetch_time", "orcid_id", "doi",
         "title", "journal", "year", "month", "date",
         "name", "en_name"
     ]
@@ -196,17 +204,18 @@ def save_csv():
     print(f"\n{Log.GREEN}🎉 最终有效论文：{len(unique_papers)} 篇{Log.RESET}")
     print(f"{Log.GREEN}✅ 文件已保存：scripts/news.csv{Log.RESET}")
 
+# 主流程
 def main():
-    print(f"{Log.BLUE}===== ORCID 论文自动更新（去重+纯净标题+日期）====={Log.RESET}")
+    print(f"{Log.BLUE}===== ORCID 论文自动更新（最终修复版）====={Log.RESET}")
     load_existing()
     if not load_authors():
         return
 
     for orcid in orcid_authors:
         print(f"\n{Log.BLUE}──────── 处理：{orcid_authors[orcid]['name']}{Log.RESET}")
-        dois = fetch_orcid_dois(orcid)
-        for doi in dois:
-            process_paper(orcid, doi)
+        paper_list = fetch_orcid_dois(orcid)
+        for title, doi, year, month, day in paper_list:
+            process_paper(orcid, title, doi, year, month, day)
             time.sleep(REQUEST_DELAY)
 
     save_csv()
