@@ -77,6 +77,206 @@ ninja.data = [{
           description: "group photo",
           section: "",handler: () => {
               window.location.href = "/events/events1/";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-inorganics",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Inorganics!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.3390_inorganics13100316.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-science",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Science!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1126_science.adu3996.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-science-advances",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Science Advances!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1126_sciadv.adr4435.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-science-china-chemistry",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Science China Chemistry!...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1007_s11426-017-9025-1.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-molecules",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Molecules!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.3390_molecules23102681.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-the-journal-of-organic-chemistry",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in The Journal of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.joc.7b00407.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.7b00714.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.6b12329.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.7b01801.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-nature-communications",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Nature Communications!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_ncomms15438.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-acs-catalysis",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in ACS Catalysis!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.6b00619.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.6b04113.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-science",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Science!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1126_science.aaf4434.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Angewandte Chemie International...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.201511486.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-acs-catalysis",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in ACS Catalysis!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.5b01075.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-nature",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Nature!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_nature14615.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.5b03488.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-organic-letters",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Organic Letters!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.orglett.5b03171.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-acs-central-science",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in ACS Central Science!...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscentsci.5b00332.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.5b04474.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-chem-sci",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Chem. Sci.!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c3sc52882k.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja506660c.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-organic-letters",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Organic Letters!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ol501958s.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-the-journal-of-organic-chemistry",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in The Journal of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jo502219d.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja4118413.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja5098308.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja5105206.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-organic-letters",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Organic Letters!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ol502780w.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja309873z.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Journal of the...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja4012657.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-title-in-chemical-science",
+          title: 'Congratulations to Hong Xin for publishing the paper {title} in Chemical Science!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c1sc00230a.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-title-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper {title} in Angewandte Chemie International...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.202518560.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-title-in-scientific-data",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper {title} in Scientific Data!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41597-024-03933-6.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-title-in-chemistry-an-asian-journal",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper {title} in Chemistry – An...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_asia.202300011.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-title-in-chinese-science-bulletin",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper {title} in Chinese Science Bulletin!...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1360_tb-2024-0812.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-title-in-synlett",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper {title} in Synlett!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1055_s-0040-1705977.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-title-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper {title} in Angewandte Chemie International...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.202106880.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-title-in-nature-communications",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper {title} in Nature Communications!',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41467-025-67770-w.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-title-in-nature-machine-intelligence",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper {title} in Nature Machine Intelligence!...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s42256-025-01098-4.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-title-in-organic-amp-amp-biomolecular-chemistry",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper {title} in Organic &amp;amp;amp; Biomolecular...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_d5ob00007f.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",

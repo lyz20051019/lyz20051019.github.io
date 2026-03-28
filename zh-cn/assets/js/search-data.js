@@ -77,6 +77,206 @@ ninja.data = [{
           description: "课题组合照",
           section: "",handler: () => {
               window.location.href = "/zh-cn/events/events1/";
+            },},{id: "news-祝贺洪鑫在-inorganics-上发表了论文-title",
+          title: '祝贺洪鑫在《Inorganics》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.3390_inorganics13100316.html";
+            },},{id: "news-祝贺洪鑫在-science-上发表了论文-title",
+          title: '祝贺洪鑫在《Science》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1126_science.adu3996.html";
+            },},{id: "news-祝贺洪鑫在-science-advances-上发表了论文-title",
+          title: '祝贺洪鑫在《Science Advances》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1126_sciadv.adr4435.html";
+            },},{id: "news-祝贺洪鑫在-science-china-chemistry-上发表了论文-title",
+          title: '祝贺洪鑫在《Science China Chemistry》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1007_s11426-017-9025-1.html";
+            },},{id: "news-祝贺洪鑫在-molecules-上发表了论文-title",
+          title: '祝贺洪鑫在《Molecules》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.3390_molecules23102681.html";
+            },},{id: "news-祝贺洪鑫在-the-journal-of-organic-chemistry-上发表了论文-title",
+          title: '祝贺洪鑫在《The Journal of Organic Chemistry》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_acs.joc.7b00407.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_jacs.7b00714.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_jacs.6b12329.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_jacs.7b01801.html";
+            },},{id: "news-祝贺洪鑫在-nature-communications-上发表了论文-title",
+          title: '祝贺洪鑫在《Nature Communications》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1038_ncomms15438.html";
+            },},{id: "news-祝贺洪鑫在-acs-catalysis-上发表了论文-title",
+          title: '祝贺洪鑫在《ACS Catalysis》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_acscatal.6b00619.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_jacs.6b04113.html";
+            },},{id: "news-祝贺洪鑫在-science-上发表了论文-title",
+          title: '祝贺洪鑫在《Science》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1126_science.aaf4434.html";
+            },},{id: "news-祝贺洪鑫在-angewandte-chemie-international-edition-上发表了论文-title",
+          title: '祝贺洪鑫在《Angewandte Chemie International Edition》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1002_anie.201511486.html";
+            },},{id: "news-祝贺洪鑫在-acs-catalysis-上发表了论文-title",
+          title: '祝贺洪鑫在《ACS Catalysis》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_acscatal.5b01075.html";
+            },},{id: "news-祝贺洪鑫在-nature-上发表了论文-title",
+          title: '祝贺洪鑫在《Nature》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1038_nature14615.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_jacs.5b03488.html";
+            },},{id: "news-祝贺洪鑫在-organic-letters-上发表了论文-title",
+          title: '祝贺洪鑫在《Organic Letters》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_acs.orglett.5b03171.html";
+            },},{id: "news-祝贺洪鑫在-acs-central-science-上发表了论文-title",
+          title: '祝贺洪鑫在《ACS Central Science》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_acscentsci.5b00332.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_jacs.5b04474.html";
+            },},{id: "news-祝贺洪鑫在-chem-sci-上发表了论文-title",
+          title: '祝贺洪鑫在《Chem. Sci.》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1039_c3sc52882k.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_ja506660c.html";
+            },},{id: "news-祝贺洪鑫在-organic-letters-上发表了论文-title",
+          title: '祝贺洪鑫在《Organic Letters》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_ol501958s.html";
+            },},{id: "news-祝贺洪鑫在-the-journal-of-organic-chemistry-上发表了论文-title",
+          title: '祝贺洪鑫在《The Journal of Organic Chemistry》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_jo502219d.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_ja4118413.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_ja5098308.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_ja5105206.html";
+            },},{id: "news-祝贺洪鑫在-organic-letters-上发表了论文-title",
+          title: '祝贺洪鑫在《Organic Letters》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_ol502780w.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_ja309873z.html";
+            },},{id: "news-祝贺洪鑫在-journal-of-the-american-chemical-society-上发表了论文-title",
+          title: '祝贺洪鑫在《Journal of the American Chemical Society》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_ja4012657.html";
+            },},{id: "news-祝贺洪鑫在-chemical-science-上发表了论文-title",
+          title: '祝贺洪鑫在《Chemical Science》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1039_c1sc00230a.html";
+            },},{id: "news-祝贺汤缪炅在-angewandte-chemie-international-edition-上发表了论文-title",
+          title: '祝贺汤缪炅在《Angewandte Chemie International Edition》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1002_anie.202518560.html";
+            },},{id: "news-祝贺汤缪炅在-scientific-data-上发表了论文-title",
+          title: '祝贺汤缪炅在《Scientific Data》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1038_s41597-024-03933-6.html";
+            },},{id: "news-祝贺汤缪炅在-chemistry-an-asian-journal-上发表了论文-title",
+          title: '祝贺汤缪炅在《Chemistry – An Asian Journal》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1002_asia.202300011.html";
+            },},{id: "news-祝贺汤缪炅在-chinese-science-bulletin-上发表了论文-title",
+          title: '祝贺汤缪炅在《Chinese Science Bulletin》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1360_tb-2024-0812.html";
+            },},{id: "news-祝贺汤缪炅在-synlett-上发表了论文-title",
+          title: '祝贺汤缪炅在《Synlett》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1055_s-0040-1705977.html";
+            },},{id: "news-祝贺汤缪炅在-angewandte-chemie-international-edition-上发表了论文-title",
+          title: '祝贺汤缪炅在《Angewandte Chemie International Edition》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1002_anie.202106880.html";
+            },},{id: "news-祝贺汤缪炅在-nature-communications-上发表了论文-title",
+          title: '祝贺汤缪炅在《Nature Communications》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1038_s41467-025-67770-w.html";
+            },},{id: "news-祝贺汤缪炅在-nature-machine-intelligence-上发表了论文-title",
+          title: '祝贺汤缪炅在《Nature Machine Intelligence》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1038_s42256-025-01098-4.html";
+            },},{id: "news-祝贺汤缪炅在-organic-amp-amp-biomolecular-chemistry-上发表了论文-title",
+          title: '祝贺汤缪炅在《Organic &amp;amp;amp; Biomolecular Chemistry》上发表了论文《{title}》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1039_d5ob00007f.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",
