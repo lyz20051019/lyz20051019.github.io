@@ -27,7 +27,7 @@ class Log:
     RED = "\033[91m"
     RESET = "\033[0m"
 
-# 中文名字拼接：2人A和B，多人A、B和C
+# 中文名字拼接
 def join_chinese_names(name_list: List[str]) -> str:
     names = [n.strip() for n in name_list if n.strip()]
     names = sorted(list(set(names)))
@@ -40,7 +40,7 @@ def join_chinese_names(name_list: List[str]) -> str:
     else:
         return "、".join(names[:-1]) + "和" + names[-1]
 
-# 英文名字拼接：2人A and B，多人A, B and C
+# 英文名字拼接
 def join_english_names(name_list: List[str]) -> str:
     names = [n.strip() for n in name_list if n.strip()]
     names = sorted(list(set(names)))
@@ -53,7 +53,7 @@ def join_english_names(name_list: List[str]) -> str:
     else:
         return ", ".join(names[:-1]) + " and " + names[-1]
 
-# 读取作者信息
+# 读取作者
 def load_authors():
     if not os.path.exists(ORCID_CSV):
         print(f"{Log.RED}❌ 未找到文件：{ORCID_CSV}{Log.RESET}")
@@ -77,7 +77,7 @@ def load_authors():
         print(f"{Log.RED}❌ 读取作者失败：{str(e)}{Log.RESET}")
         return False
 
-# 加载已存在CSV，保留fetch_time
+# 加载旧数据
 def load_existing_papers():
     if not os.path.exists(NEWS_CSV):
         print(f"{Log.YELLOW}ℹ️ 未找到旧数据文件，将全新创建{Log.RESET}")
@@ -120,16 +120,7 @@ def clean_doi(raw_doi: str) -> Optional[str]:
         return None
     return doi
 
-# 标题归一化
-def normalize_title(title: str) -> str:
-    if not title:
-        return ""
-    title = title.lower()
-    title = re.sub(r"<[^>]+>", "", title)
-    title = re.sub(r"[^a-z0-9\u4e00-\u9fa5]", "", title)
-    return title.strip()
-
-# ===================== 修复：ORCID仅抓取标题+DOI（弃用不稳定日期） =====================
+# ORCID 只抓标题+DOI
 def fetch_orcid_dois(orcid: str) -> List[Tuple[str, str]]:
     url = f"https://pub.orcid.org/v3.0/{orcid}/works"
     headers = {"Accept": "application/json"}
@@ -170,7 +161,7 @@ def fetch_orcid_dois(orcid: str) -> List[Tuple[str, str]]:
         print(f"{Log.RED}❌ 抓取失败：{str(e)}{Log.RESET}")
         return []
 
-# ===================== 核心修复：采用你的CrossRef逻辑，获取完整 年/月/日 =====================
+# CrossRef 元数据（年/月/日/期刊）
 def crossref_meta(doi: str) -> dict:
     try:
         url = f"https://api.crossref.org/works/{quote(doi)}"
@@ -179,7 +170,6 @@ def crossref_meta(doi: str) -> dict:
         r.raise_for_status()
         m = r.json()["message"]
 
-        # 标准日期解析逻辑（你提供的逻辑 + 补全月/日）
         year, month, day = 0, 0, 0
         date_parts = None
         if m.get("published-print"):
@@ -188,35 +178,21 @@ def crossref_meta(doi: str) -> dict:
             date_parts = m["published-online"]["date-parts"][0]
 
         if date_parts:
-            year = date_parts[0] if len(date_parts) >= 1 else 0
-            month = date_parts[1] if len(date_parts) >= 2 else 0
-            day = date_parts[2] if len(date_parts) >= 3 else 0
+            year = int(date_parts[0]) if len(date_parts)>=1 else 0
+            month = int(date_parts[1]) if len(date_parts)>=2 else 0
+            day = int(date_parts[2]) if len(date_parts)>=3 else 0
 
-        # 转换为整数，兼容CSV格式
-        year = int(year) if year else 0
-        month = int(month) if month else 0
-        day = int(day) if day else 0
-
-        # 获取期刊名
         journal = m.get("container-title", ["未知期刊"])[0] or "未知期刊"
-
-        return {
-            "year": year,
-            "month": month,
-            "date": day,
-            "journal": journal
-        }
+        return {"year": year, "month": month, "date": day, "journal": journal}
     except Exception:
-        # 获取失败时返回默认值
         return {"year": 0, "month": 0, "date": 0, "journal": "未知期刊"}
 
-# 处理论文（日期完全来自CrossRef，无bug）
+# 处理论文：旧记录缺数据就补齐，fetch_time不动
 def process_paper(orcid: str, title: str, doi: str):
     key = f"{orcid}_{doi}"
-    if key in paper_records:
-        return
+    meta = crossref_meta(doi)
 
-    # 初始化作者映射
+    # 把新抓到的作者加入集合
     if doi not in doi_author_map:
         doi_author_map[doi] = {"cn": set(), "en": set()}
     author = orcid_authors[orcid]
@@ -227,12 +203,27 @@ def process_paper(orcid: str, title: str, doi: str):
     if en_name:
         doi_author_map[doi]["en"].add(en_name)
 
-    # ===================== 修复点：从CrossRef获取准确日期 =====================
-    meta = crossref_meta(doi)
-    fetch_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # 已有记录：只补空缺，不改 fetch_time
+    if key in paper_records:
+        rec = paper_records[key]
+        
+        # 年份为空/0 就补齐
+        if not rec.get("year") or rec["year"] in ("", "0", 0):
+            rec["year"] = meta["year"]
+        # 月份为空/0 就补齐
+        if not rec.get("month") or rec["month"] in ("", "0", 0):
+            rec["month"] = meta["month"]
+        # 日期为空/0 就补齐
+        if not rec.get("date") or rec["date"] in ("", "0", 0):
+            rec["date"] = meta["date"]
+        # 期刊未知就补齐
+        if rec.get("journal", "") in ("", "未知期刊"):
+            rec["journal"] = meta["journal"]
+        return
 
+    # 全新记录：正常新建
     paper_records[key] = {
-        "fetch_time": fetch_time,
+        "fetch_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "orcid_id": orcid,
         "doi": doi,
         "title": title,
@@ -244,7 +235,7 @@ def process_paper(orcid: str, title: str, doi: str):
         "en_name": ""
     }
 
-# 统一拼接作者名字
+# 统一拼接作者名
 def patch_all_author_names():
     for key, record in paper_records.items():
         doi = record.get("doi", "").strip()
@@ -263,21 +254,14 @@ def save_csv():
     with open(NEWS_CSV, "w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
-        writer.rows = []
-        # 确保数据类型正确
-        for row in paper_records.values():
-            csv_row = {}
-            for k in fields:
-                csv_row[k] = row.get(k, "")
-            writer.rows.append(csv_row)
-        writer.writerows(writer.rows)
+        writer.writerows(paper_records.values())
     
     print(f"\n{Log.GREEN}🎉 总记录数：{len(paper_records)} 条{Log.RESET}")
-    print(f"{Log.GREEN}✅ 日期已修复！旧数据fetch_time未修改，作者名已拼接{Log.RESET}")
+    print(f"{Log.GREEN}✅ 旧数据空缺日期/期刊已补齐，fetch_time 未改动{Log.RESET}")
 
 # 主流程
 def main():
-    print(f"{Log.BLUE}===== ORCID 论文抓取（日期修复版+多作者拼接）====={Log.RESET}")
+    print(f"{Log.BLUE}===== ORCID 论文抓取（补齐空缺日期版）====={Log.RESET}")
     if not load_authors():
         return
 
