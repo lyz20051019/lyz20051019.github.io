@@ -9,4 +9,5 @@ related_posts: false
 
 
 Congratulations to {en_name} for publishing the paper *{title}* in *{journal}*!
+
 DOI: {doi}
