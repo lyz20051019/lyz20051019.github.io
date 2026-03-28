@@ -24,3 +24,13 @@ $max-content-width: {{ site.max_width }};
   "tabler-icons/tabler-icons-outline.scss",
   "flag-icons/flag-icons"
 ;
+
+// 显示出版物序号
+.bibliography {
+  list-style: decimal !important;
+  padding-left: 2rem !important;
+}
+.bibliography li {
+  display: list-item !important;
+  margin-bottom: 1rem;
+}
