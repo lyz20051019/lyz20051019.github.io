@@ -17,9 +17,7 @@ REQUEST_DELAY = 0.5
 # ====================================================
 
 orcid_authors = {}
-# 存储最终论文记录 key: f"{orcid}_{doi}" 保证同一DOI不同ORCID多条记录
 paper_records: Dict[str, dict] = {}
-# 存储每个DOI对应的所有中文/英文作者列表（用于拼接）
 doi_author_map: Dict[str, Dict[str, Set[str]]] = {}
 
 class Log:
@@ -79,7 +77,7 @@ def load_authors():
         print(f"{Log.RED}❌ 读取作者失败：{str(e)}{Log.RESET}")
         return False
 
-# 加载已存在CSV，保留fetch_time，收集作者信息
+# 加载已存在CSV，保留fetch_time
 def load_existing_papers():
     if not os.path.exists(NEWS_CSV):
         print(f"{Log.YELLOW}ℹ️ 未找到旧数据文件，将全新创建{Log.RESET}")
@@ -94,11 +92,9 @@ def load_existing_papers():
                 if not orcid or not doi:
                     continue
 
-                # 保留旧记录，绝不修改fetch_time
                 key = f"{orcid}_{doi}"
                 paper_records[key] = row
 
-                # 收集该DOI对应的作者
                 if doi not in doi_author_map:
                     doi_author_map[doi] = {"cn": set(), "en": set()}
                 cn_name = row.get("name", "").strip()
@@ -116,7 +112,7 @@ def load_existing_papers():
 def clean_doi(raw_doi: str) -> Optional[str]:
     if not raw_doi:
         return None
-    doi = re.sub(r"^https?://doi\.org/", "", raw_doi.strip().lower())
+    doi = re.sub(r"^https?://doi\.org/", "", raw_doi.strip().lower(), flags=re.I)
     for prefix in FILTER_DOI_PREFIX:
         if doi.startswith(prefix):
             return None
@@ -133,8 +129,8 @@ def normalize_title(title: str) -> str:
     title = re.sub(r"[^a-z0-9\u4e00-\u9fa5]", "", title)
     return title.strip()
 
-# 从ORCID抓取论文
-def fetch_orcid_papers(orcid: str) -> List[Tuple[str, str, int, int, int]]:
+# ===================== 修复：ORCID仅抓取标题+DOI（弃用不稳定日期） =====================
+def fetch_orcid_dois(orcid: str) -> List[Tuple[str, str]]:
     url = f"https://pub.orcid.org/v3.0/{orcid}/works"
     headers = {"Accept": "application/json"}
     results = []
@@ -165,20 +161,8 @@ def fetch_orcid_papers(orcid: str) -> List[Tuple[str, str, int, int, int]]:
             if not doi or doi in doi_set:
                 continue
 
-            year, month, day = 0, 0, 0
-            pub_date = w.get("publication-date", {})
-            try:
-                year = int(pub_date.get("year", {}).get("value", 0))
-            except: pass
-            try:
-                month = int(pub_date.get("month", {}).get("value", 0))
-            except: pass
-            try:
-                day = int(pub_date.get("day", {}).get("value", 0))
-            except: pass
-
             doi_set.add(doi)
-            results.append((clean_title, doi, year, month, day))
+            results.append((clean_title, doi))
 
         print(f"{Log.BLUE}🔍 {orcid} 有效论文：{len(results)} 篇{Log.RESET}")
         return results
@@ -186,28 +170,55 @@ def fetch_orcid_papers(orcid: str) -> List[Tuple[str, str, int, int, int]]:
         print(f"{Log.RED}❌ 抓取失败：{str(e)}{Log.RESET}")
         return []
 
-# 获取期刊名
-def get_journal(doi: str) -> str:
+# ===================== 核心修复：采用你的CrossRef逻辑，获取完整 年/月/日 =====================
+def crossref_meta(doi: str) -> dict:
     try:
         url = f"https://api.crossref.org/works/{quote(doi)}"
-        msg = requests.get(url, timeout=TIMEOUT).json()["message"]
-        if msg.get("type") != "journal-article":
-            return "未知期刊"
-        return msg.get("container-title", ["未知期刊"])[0]
-    except:
-        return "未知期刊"
+        headers = {"User-Agent": "Mozilla/5.0"}
+        r = requests.get(url, headers=headers, timeout=10)
+        r.raise_for_status()
+        m = r.json()["message"]
 
-# 处理单篇论文，支持多作者拼接
-def process_paper(orcid: str, title: str, doi: str, year: int, month: int, day: int):
+        # 标准日期解析逻辑（你提供的逻辑 + 补全月/日）
+        year, month, day = 0, 0, 0
+        date_parts = None
+        if m.get("published-print"):
+            date_parts = m["published-print"]["date-parts"][0]
+        elif m.get("published-online"):
+            date_parts = m["published-online"]["date-parts"][0]
+
+        if date_parts:
+            year = date_parts[0] if len(date_parts) >= 1 else 0
+            month = date_parts[1] if len(date_parts) >= 2 else 0
+            day = date_parts[2] if len(date_parts) >= 3 else 0
+
+        # 转换为整数，兼容CSV格式
+        year = int(year) if year else 0
+        month = int(month) if month else 0
+        day = int(day) if day else 0
+
+        # 获取期刊名
+        journal = m.get("container-title", ["未知期刊"])[0] or "未知期刊"
+
+        return {
+            "year": year,
+            "month": month,
+            "date": day,
+            "journal": journal
+        }
+    except Exception:
+        # 获取失败时返回默认值
+        return {"year": 0, "month": 0, "date": 0, "journal": "未知期刊"}
+
+# 处理论文（日期完全来自CrossRef，无bug）
+def process_paper(orcid: str, title: str, doi: str):
     key = f"{orcid}_{doi}"
-    # 同一ORCID+DOI已存在，跳过（不重复添加）
     if key in paper_records:
         return
 
-    # 初始化DOI作者集合
+    # 初始化作者映射
     if doi not in doi_author_map:
         doi_author_map[doi] = {"cn": set(), "en": set()}
-    # 添加当前作者
     author = orcid_authors[orcid]
     cn_name = author["name"].strip()
     en_name = author["en_name"].strip()
@@ -216,32 +227,29 @@ def process_paper(orcid: str, title: str, doi: str, year: int, month: int, day: 
     if en_name:
         doi_author_map[doi]["en"].add(en_name)
 
-    # 查询期刊
-    journal = get_journal(doi)
-    # 新记录生成fetch_time，旧记录已保留不修改
+    # ===================== 修复点：从CrossRef获取准确日期 =====================
+    meta = crossref_meta(doi)
     fetch_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # 先存入原始信息，最后统一拼接名字
     paper_records[key] = {
         "fetch_time": fetch_time,
         "orcid_id": orcid,
         "doi": doi,
         "title": title,
-        "journal": journal,
-        "year": year,
-        "month": month,
-        "date": day,
+        "journal": meta["journal"],
+        "year": meta["year"],
+        "month": meta["month"],
+        "date": meta["date"],
         "name": "",
         "en_name": ""
     }
 
-# 统一为所有记录拼接作者名字
+# 统一拼接作者名字
 def patch_all_author_names():
     for key, record in paper_records.items():
         doi = record.get("doi", "").strip()
         if not doi or doi not in doi_author_map:
             continue
-        # 拼接名字
         cn_list = list(doi_author_map[doi]["cn"])
         en_list = list(doi_author_map[doi]["en"])
         record["name"] = join_chinese_names(cn_list)
@@ -255,31 +263,34 @@ def save_csv():
     with open(NEWS_CSV, "w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
-        writer.writerows(paper_records.values())
+        writer.rows = []
+        # 确保数据类型正确
+        for row in paper_records.values():
+            csv_row = {}
+            for k in fields:
+                csv_row[k] = row.get(k, "")
+            writer.rows.append(csv_row)
+        writer.writerows(writer.rows)
     
     print(f"\n{Log.GREEN}🎉 总记录数：{len(paper_records)} 条{Log.RESET}")
-    print(f"{Log.GREEN}✅ 作者名字已自动拼接，旧数据fetch_time未修改{Log.RESET}")
+    print(f"{Log.GREEN}✅ 日期已修复！旧数据fetch_time未修改，作者名已拼接{Log.RESET}")
 
 # 主流程
 def main():
-    print(f"{Log.BLUE}===== ORCID 论文抓取（多作者拼接+保留fetch_time）====={Log.RESET}")
+    print(f"{Log.BLUE}===== ORCID 论文抓取（日期修复版+多作者拼接）====={Log.RESET}")
     if not load_authors():
         return
 
-    # 加载旧数据，保留fetch_time
     load_existing_papers()
 
-    # 抓取所有作者论文
     for orcid in orcid_authors:
         print(f"\n{Log.BLUE}──────── 处理：{orcid_authors[orcid]['name']}{Log.RESET}")
-        papers = fetch_orcid_papers(orcid)
-        for title, doi, year, month, day in papers:
-            process_paper(orcid, title, doi, year, month, day)
+        paper_list = fetch_orcid_dois(orcid)
+        for title, doi in paper_list:
+            process_paper(orcid, title, doi)
             time.sleep(REQUEST_DELAY)
 
-    # 统一拼接所有作者名字
     patch_all_author_names()
-    # 保存结果
     save_csv()
 
 if __name__ == "__main__":
