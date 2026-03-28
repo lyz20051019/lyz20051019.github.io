@@ -77,6 +77,206 @@ ninja.data = [{
           description: "group photo",
           section: "",handler: () => {
               window.location.href = "/events/events1/";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-theoretical-study-on-the-ortho-para-reactivity-difference-in-ru-catalyzed-amination-of-aminopyridines-via-η6-coordination-role-of-meisenheimer-intermediate-coordination-ability-in-inorganics",
+          title: 'Congratulations to Hong Xin for publishing the paper Theoretical Study on the Ortho–Para...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.3390_inorganics13100316.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-asymmetric-amination-of-alkyl-radicals-with-two-minimally-different-alkyl-substituents-in-science",
+          title: 'Congratulations to Hong Xin for publishing the paper Asymmetric amination of alkyl radicals...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1126_science.adu3996.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-rhodium-catalyzed-atropodivergent-hydroamination-of-alkynes-by-leveraging-two-potential-enantiodetermining-steps-in-science-advances",
+          title: 'Congratulations to Hong Xin for publishing the paper Rhodium-Catalyzed Atropodivergent Hydroamination of Alkynes...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1126_sciadv.adr4435.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-ni-mediated-c-n-activation-of-amides-and-derived-catalytic-transformations-in-science-china-chemistry",
+          title: 'Congratulations to Hong Xin for publishing the paper Ni-mediated C–N activation of amides...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1007_s11426-017-9025-1.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-computational-study-of-mechanism-and-thermodynamics-of-ni-ipr-catalyzed-amidation-of-esters-in-molecules",
+          title: 'Congratulations to Hong Xin for publishing the paper Computational Study of Mechanism and...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.3390_molecules23102681.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-2-1-cycloaddition-reactions-give-further-evidence-of-the-nitrenium-like-character-of-1-aza-2-azoniaallene-salts-in-the-journal-of-organic-chemistry",
+          title: 'Congratulations to Hong Xin for publishing the paper (2+1)-Cycloaddition Reactions Give Further Evidence...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.joc.7b00407.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-mechanisms-and-origins-of-chemo-and-regioselectivities-of-ru-ii-catalyzed-decarboxylative-c-h-alkenylation-of-aryl-carboxylic-acids-with-alkynes-a-computational-study-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper Mechanisms and Origins of Chemo-...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.7b00714.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-palladium-catalyzed-suzuki-miyaura-coupling-of-aryl-esters-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper Palladium-Catalyzed Suzuki-Miyaura Coupling of Aryl...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.6b12329.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-the-origins-of-dramatic-differences-in-five-membered-vs-six-membered-chelation-of-pd-ii-on-efficiency-of-c-sp-3-h-bond-activation-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper The Origins of Dramatic Differences...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.7b01801.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-understanding-trends-in-electrochemical-carbon-dioxide-reduction-rates-in-nature-communications",
+          title: 'Congratulations to Hong Xin for publishing the paper Understanding trends in electrochemical carbon...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_ncomms15438.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-how-doped-mos2-breaks-transition-metal-scaling-relations-for-co2-electrochemical-reduction-in-acs-catalysis",
+          title: 'Congratulations to Hong Xin for publishing the paper How Doped MoS2 Breaks Transition-Metal...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.6b00619.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-distortion-controlled-reactivity-and-molecular-dynamics-of-dehydro-diels-alder-reactions-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper Distortion-Controlled Reactivity and Molecular Dynamics...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.6b04113.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-ligand-accelerated-enantioselective-methylene-c-sp-3-h-bond-activation-in-science",
+          title: 'Congratulations to Hong Xin for publishing the paper Ligand-accelerated enantioselective methylene C(sp(3))-H bond...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1126_science.aaf4434.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-nickel-catalyzed-activation-of-acyl-c-o-bonds-of-methyl-esters-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Hong Xin for publishing the paper Nickel-Catalyzed Activation of Acyl C-O...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.201511486.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-computational-exploration-of-mechanism-and-selectivities-of-nhc-nickel-ii-hydride-catalyzed-hydroalkenylations-of-styrene-with-alpha-olefins-in-acs-catalysis",
+          title: 'Congratulations to Hong Xin for publishing the paper Computational Exploration of Mechanism and...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.5b01075.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-conversion-of-amides-to-esters-by-the-nickel-catalysed-activation-of-amide-c-n-bonds-in-nature",
+          title: 'Congratulations to Hong Xin for publishing the paper Conversion of amides to esters...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_nature14615.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-iodoarene-catalyzed-stereospecific-intramolecular-sp-3-c-h-amination-reaction-development-and-mechanistic-insights-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper Iodoarene-Catalyzed Stereospecific Intramolecular sp(3) C-H...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.5b03488.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-ligand-controlled-diastereoselective-1-3-dipolar-cycloadditions-of-azomethine-ylides-with-methacrylonitrile-in-organic-letters",
+          title: 'Congratulations to Hong Xin for publishing the paper Ligand-Controlled Diastereoselective 1,3-Dipolar Cycloadditions of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.orglett.5b03171.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-mechanistic-insights-into-two-phase-radical-c-h-arylations-in-acs-central-science",
+          title: 'Congratulations to Hong Xin for publishing the paper Mechanistic Insights into Two-Phase Radical...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscentsci.5b00332.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-mechanism-and-dynamics-of-intramolecular-c-h-insertion-reactions-of-1-aza-2-azoniaallene-salts-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper Mechanism and Dynamics of Intramolecular...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.5b04474.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-distortion-accelerated-cycloadditions-and-strain-release-promoted-cycloreversions-in-the-organocatalytic-carbonyl-olefin-metathesis-in-chem-sci",
+          title: 'Congratulations to Hong Xin for publishing the paper Distortion-accelerated cycloadditions and strain-release-promoted cycloreversions...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c3sc52882k.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-mechanism-and-selectivity-of-n-triflylphosphoramide-catalyzed-3-2-cycloaddition-between-hydrazones-and-alkenes-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper Mechanism and Selectivity of N-Triflylphosphoramide...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja506660c.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-how-tethers-control-the-chemo-and-regioselectivities-of-intramolecular-cycloadditions-between-aryl-1-aza-2-azoniaallenes-and-alkenes-in-organic-letters",
+          title: 'Congratulations to Hong Xin for publishing the paper How Tethers Control the Chemo-...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ol501958s.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-mechanism-reactivity-and-selectivity-of-nickel-catalyzed-4-4-2-cycloadditions-of-dienes-and-alkynes-in-the-journal-of-organic-chemistry",
+          title: 'Congratulations to Hong Xin for publishing the paper Mechanism, Reactivity, and Selectivity of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jo502219d.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-mechanisms-and-origins-of-switchable-chemoselectivity-of-ni-catalyzed-c-aryl-o-and-c-acyl-o-activation-of-aryl-esters-with-phosphine-ligands-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper Mechanisms and Origins of Switchable...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja4118413.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-reactivity-and-chemoselectivity-of-allenes-in-rh-i-catalyzed-intermolecular-5-2-cycloadditions-with-vinylcyclopropanes-allene-mediated-rhodacycle-formation-can-poison-rh-i-catalyzed-cycloadditions-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper Reactivity and Chemoselectivity of Allenes...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja5098308.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-ni-nhc-catalyzed-cycloaddition-of-diynes-and-tropone-apparent-enone-cycloaddition-involving-an-8-pi-insertion-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper Ni(NHC)]-Catalyzed Cycloaddition of Diynes and...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja5105206.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-why-alkynyl-substituents-dramatically-accelerate-hexadehydro-diels-alder-hdda-reactions-stepwise-mechanisms-of-hdda-cycloadditions-in-organic-letters",
+          title: 'Congratulations to Hong Xin for publishing the paper Why Alkynyl Substituents Dramatically Accelerate...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ol502780w.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-mechanism-and-origins-of-ligand-controlled-selectivities-in-ni-nhc-catalyzed-intramolecular-5-2-cycloadditions-and-homo-ene-reactions-a-theoretical-study-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper Mechanism and Origins of Ligand-Controlled...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja309873z.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-mechanism-and-origins-of-selectivity-in-ru-ii-catalyzed-intramolecular-5-2-cycloadditions-and-ene-reactions-of-vinylcyclopropanes-and-alkynes-from-density-functional-theory-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Hong Xin for publishing the paper Mechanism and Origins of Selectivity...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_ja4012657.html";
+            },},{id: "news-congratulations-to-hong-xin-for-publishing-the-paper-nickel-catalyzed-amination-of-aryl-carbamates-and-sequential-site-selective-cross-couplings-in-chemical-science",
+          title: 'Congratulations to Hong Xin for publishing the paper Nickel-catalyzed amination of aryl carbamates...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c1sc00230a.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-data-driven-modeling-of-n-n-dioxide-metal-catalyzed-asymmetric-michael-additions-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper Data‐Driven Modeling of N,N′‐Dioxide/Metal‐Catalyzed Asymmetric...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.202518560.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-qm9star-two-million-dft-computed-equilibrium-structures-for-ions-and-radicals-with-atomic-information-in-scientific-data",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper QM9star, two Million DFT-computed Equilibrium...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41597-024-03933-6.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-exploring-spectrum-based-molecular-descriptors-for-reaction-performance-prediction-in-chemistry-an-asian-journal",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper Exploring Spectrum‐based Molecular Descriptors for...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_asia.202300011.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-数据驱动的有机分子理化性质预测-in-chinese-science-bulletin",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper 数据驱动的有机分子理化性质预测 in Chinese Science Bulletin!...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1360_tb-2024-0812.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-a-molecular-stereostructure-descriptor-based-on-spherical-projection-in-synlett",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper A Molecular Stereostructure Descriptor Based...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1055_s-0040-1705977.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-towards-data-driven-design-of-asymmetric-hydrogenation-of-olefins-database-and-hierarchical-learning-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper Towards Data‐Driven Design of Asymmetric...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.202106880.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-unveiling-mechanistic-patterns-of-copper-catalyzed-radical-bond-formation-through-linear-free-energy-relationship-in-nature-communications",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper Unveiling mechanistic patterns of copper-catalyzed...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41467-025-67770-w.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-a-unified-pre-trained-deep-learning-framework-for-cross-task-reaction-performance-prediction-and-synthesis-planning-in-nature-machine-intelligence",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper A unified pre-trained deep learning...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s42256-025-01098-4.html";
+            },},{id: "news-congratulations-to-tang-miao-jiong-for-publishing-the-paper-using-machine-learning-methods-to-predict-the-diabatic-bond-dissociation-energy-of-non-heme-iron-complexes-in-organic-amp-amp-biomolecular-chemistry",
+          title: 'Congratulations to Tang Miao-jiong for publishing the paper Using machine learning methods to...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_d5ob00007f.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",
