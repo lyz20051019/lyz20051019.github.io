@@ -1,0 +1,54 @@
+﻿name: Auto Generate News Markdown
+
+on:
+  schedule:
+    - cron: '0 18 * * *'  # 定时执行
+  workflow_dispatch:      # 手动触发
+  push:
+    paths:
+      - scripts/news.csv  # 当CSV文件变更时自动触发
+
+jobs:
+  generate-news:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }} 
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      # ✅ 仅运行：自动生成新闻MD文件
+      - name: Generate news markdown files
+        run: python scripts/auto-generate-news.py
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      # ✅ 仅提交 _news 目录的MD文件变更
+      - name: Commit and push news files
+        run: |
+          git add _news/
+          git commit -m "chore: auto-generate news md $(date +'%Y-%m-%d %H:%M:%S')"
+          git push origin main
+
+      - name: Notify failure
+        if: failure()
+        run: echo "❌ Generate news failed!"
