@@ -11,14 +11,13 @@ from typing import Optional, Dict, List
 BASE_DIR = os.getcwd()
 ORCID_CSV = os.path.join(BASE_DIR, "scripts", "orcids.csv")
 NEWS_CSV = os.path.join(BASE_DIR, "scripts", "news.csv")
-FILTER_DOI_PREFIX = ["10.21203", "10.31219", "10.3389"]  # 预印本过滤
+FILTER_DOI_PREFIX = ["10.21203", "10.31219", "10.3389"]
 TIMEOUT = 15
 REQUEST_DELAY = 0.5
 # ====================================================
 
 orcid_authors = {}
 unique_papers: Dict[str, dict] = {}
-# 🔥 新增：存储归一化标题，用于双重去重
 exist_titles: set = set()
 
 class Log:
@@ -28,7 +27,6 @@ class Log:
     RED = "\033[91m"
     RESET = "\033[0m"
 
-# 读取作者信息（无改动）
 def load_authors():
     if not os.path.exists(ORCID_CSV):
         print(f"{Log.RED}❌ 未找到文件：{ORCID_CSV}{Log.RESET}")
@@ -52,7 +50,6 @@ def load_authors():
         print(f"{Log.RED}❌ 读取作者失败：{str(e)}{Log.RESET}")
         return False
 
-# 读取已有数据（新增：加载已有标题用于去重）
 def load_existing():
     global exist_titles
     if not os.path.exists(NEWS_CSV):
@@ -64,14 +61,12 @@ def load_existing():
             for row in reader:
                 doi = row["doi"].strip().lower()
                 unique_papers[doi] = row
-                # 加载已有标题
                 title = normalize_title(row["title"])
                 exist_titles.add(title)
         print(f"{Log.GREEN}✅ 加载已有论文：{len(unique_papers)} 篇{Log.RESET}")
     except:
         pass
 
-# 清洗DOI（无改动）
 def clean_doi(raw_doi: str) -> Optional[str]:
     if not raw_doi:
         return None
@@ -83,17 +78,50 @@ def clean_doi(raw_doi: str) -> Optional[str]:
         return None
     return doi
 
-# 🔥 新增：标题归一化（去掉特殊字符、空格、大小写，用于精准比对）
 def normalize_title(title: str) -> str:
     if not title:
         return ""
-    # 小写 + 去掉所有符号/空格/HTML标签
     title = title.lower()
     title = re.sub(r"<[^>]+>", "", title)
     title = re.sub(r"[^a-z0-9\u4e00-\u9fa5]", "", title)
     return title.strip()
 
-# 抓取DOI（无改动）
+# 🔥 修复1：清洗标题换行/异常格式 + 修复2：获取发表年月日
+def get_paper(doi: str):
+    try:
+        url = f"https://api.crossref.org/works/{quote(doi)}"
+        msg = requests.get(url, timeout=TIMEOUT).json()["message"]
+        if msg.get("type") != "journal-article":
+            return None, None, 0, 0, 0
+
+        # 清洗标题：删除换行、回车、制表符、多余空格
+        title = msg.get("title", ["未知标题"])[0]
+        title = re.sub(r'[\n\r\t]+', ' ', title)    # 去掉换行/制表符
+        title = re.sub(r'\s+', ' ', title).strip()  # 合并多余空格
+        title = re.sub(r"<[^>]+>", "", title)       # 去掉HTML标签
+
+        journal = msg.get("container-title", ["未知期刊"])[0]
+        journal = re.sub(r"<[^>]+>", "", journal)
+
+        # 解析发表日期：年/月/日，无则填0
+        year, month, day = 0, 0, 0
+        date_parts = None
+        if "published-print" in msg:
+            date_parts = msg["published-print"]["date-parts"][0]
+        elif "published-online" in msg:
+            date_parts = msg["published-online"]["date-parts"][0]
+        
+        if date_parts and len(date_parts) >= 1:
+            year = date_parts[0]
+        if date_parts and len(date_parts) >= 2:
+            month = date_parts[1]
+        if date_parts and len(date_parts) >= 3:
+            day = date_parts[2]
+
+        return title, journal, year, month, day
+    except:
+        return None, None, 0, 0, 0
+
 def fetch_orcid_dois(orcid: str) -> List[str]:
     url = f"https://pub.orcid.org/v3.0/{orcid}/works"
     headers = {"Accept": "application/json"}
@@ -122,38 +150,19 @@ def fetch_orcid_dois(orcid: str) -> List[str]:
         print(f"{Log.RED}❌ 抓取失败：{str(e)}{Log.RESET}")
         return []
 
-# 获取论文信息（无改动）
-def get_paper(doi: str):
-    try:
-        url = f"https://api.crossref.org/works/{quote(doi)}"
-        msg = requests.get(url, timeout=TIMEOUT).json()["message"]
-        if msg.get("type") != "journal-article":
-            return None, None
-        title = msg.get("title", ["未知标题"])[0]
-        journal = msg.get("container-title", ["未知期刊"])[0]
-        title = re.sub(r"<[^>]+>", "", title)
-        journal = re.sub(r"<[^>]+>", "", journal)
-        return title, journal
-    except:
-        return None, None
-
-# 🔥 核心修复：双重去重（DOI 重复 OR 标题 重复 → 直接跳过）
+# 双重去重 + 新增日期字段
 def process_paper(orcid: str, doi: str):
-    # 1. 检查DOI是否重复
     if doi in unique_papers:
         return
 
-    # 2. 获取论文信息
-    title, journal = get_paper(doi)
+    title, journal, year, month, day = get_paper(doi)
     if not title or not journal:
         return
 
-    # 3. 检查标题是否重复（同一篇论文直接跳过）
     norm_title = normalize_title(title)
     if norm_title in exist_titles:
         return
 
-    # 4. 无重复，添加数据
     author = orcid_authors[orcid]
     name, en_name = author["name"], author["en_name"]
     fetch_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -164,16 +173,22 @@ def process_paper(orcid: str, doi: str):
         "doi": doi,
         "title": title,
         "journal": journal,
+        "year": year,
+        "month": month,
+        "date": day,
         "name": name,
         "en_name": en_name
     }
-    # 记录标题，用于后续去重
     exist_titles.add(norm_title)
 
-# 保存文件（无改动）
+# 🔥 新增日期列到CSV
 def save_csv():
     os.makedirs(os.path.dirname(NEWS_CSV), exist_ok=True)
-    fields = ["fetch_time", "orcid_id", "doi", "title", "journal", "name", "en_name"]
+    fields = [
+        "fetch_time", "orcid_id", "doi", 
+        "title", "journal", "year", "month", "date",
+        "name", "en_name"
+    ]
     with open(NEWS_CSV, "w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
@@ -181,9 +196,8 @@ def save_csv():
     print(f"\n{Log.GREEN}🎉 最终有效论文：{len(unique_papers)} 篇{Log.RESET}")
     print(f"{Log.GREEN}✅ 文件已保存：scripts/news.csv{Log.RESET}")
 
-# 主流程（无改动）
 def main():
-    print(f"{Log.BLUE}===== ORCID 论文自动更新（双重去重）====={Log.RESET}")
+    print(f"{Log.BLUE}===== ORCID 论文自动更新（去重+纯净标题+日期）====={Log.RESET}")
     load_existing()
     if not load_authors():
         return
