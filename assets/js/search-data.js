@@ -77,18 +77,7 @@ ninja.data = [{
           description: "group photo",
           section: "",handler: () => {
               window.location.href = "/events/events1/";
-            },},{id: "news-a-simple-inline-announcement",
-          title: 'A simple inline announcement.',
-          description: "",
-          section: "News",},{id: "news-a-long-announcement-with-details",
-          title: 'A long announcement with details',
-          description: "",
-          section: "News",handler: () => {
-              window.location.href = "/news/en-us/announcement_2.html";
-            },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
-          title: 'A simple inline announcement with Markdown emoji! :sparkles: :smile:',
-          description: "",
-          section: "News",},{id: "projects-project-7",
+            },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",
           section: "Projects",handler: () => {

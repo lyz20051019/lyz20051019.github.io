@@ -77,18 +77,7 @@ ninja.data = [{
           description: "课题组合照",
           section: "",handler: () => {
               window.location.href = "/zh-cn/events/events1/";
-            },},{id: "news-a-simple-inline-announcement",
-          title: 'A simple inline announcement.',
-          description: "",
-          section: "动态",},{id: "news-a-long-announcement-with-details",
-          title: 'A long announcement with details',
-          description: "",
-          section: "动态",handler: () => {
-              window.location.href = "/zh-cn/news/zh-cn/announcement_2.html";
-            },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
-          title: 'A simple inline announcement with Markdown emoji! :sparkles: :smile:',
-          description: "",
-          section: "动态",},{id: "projects-project-7",
+            },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",
           section: "项目",handler: () => {
