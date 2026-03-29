@@ -3,7 +3,7 @@ page_id: publications
 layout: page
 permalink: /publications/
 title: 出版物
-description: 按类别划分的出版物，按时间顺序排列（由 jekyll-scholar 生成）。
+description: 按类别分类的出版物，按时间顺序排列（由 jekyll-scholar 生成）
 nav: true
 nav_order: 3
 ---
@@ -15,7 +15,7 @@ nav_order: 3
   <button id="toggleSort" class="btn btn-sm btn-primary">最新优先 ↓</button>
 </div>
 
-<!-- 文献容器（核心：包裹所有年份分组） -->
+<!-- 文献容器 -->
 <div class="publications">
   {% bibliography %}
 </div>
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isNewestFirst = true;
 
   // ======================================
-  // 1. 收集【年份分组】：每个分组 = 标题h2 + 文献列表ol
+  // 1. 收集年份分组
   // ======================================
   const groups = [];
   const yearHeadings = document.querySelectorAll('h2.bibliography');
@@ -36,18 +36,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const list = heading.nextElementSibling;
     if (list && list.tagName === 'OL') {
       groups.push({
-        wrapper: [heading, list], // 年份完整分组（标题+文献）
+        wrapper: [heading, list],
         year: parseInt(heading.textContent.replace(/\D/g, ''))
       });
     }
   });
 
   // ======================================
-  // 2. 生成固定编号（永久不变，按最早→最新排序）
+  // 2. 全局编号：严格 2017→2026 递增（核心原则不动）
   // ======================================
   let num = 1;
-  // 按年份正序排序，分配固定编号
   [...groups].sort((a, b) => a.year - b.year).forEach(group => {
+    // 正常分配全局编号（年份越早编号越小）
     group.wrapper[1].querySelectorAll('li').forEach(li => {
       const col = li.querySelector('.col-sm-8');
       if (col) {
@@ -56,37 +56,36 @@ document.addEventListener('DOMContentLoaded', () => {
         num++;
       }
     });
+
+    // 🔥 唯一修改：组内文献DOM反转显示（仅视觉改变，编号完全不变）
+    const lis = group.wrapper[1].querySelectorAll('li');
+    lis.forEach(li => group.wrapper[1].prepend(li));
   });
 
   // ======================================
-  // 3. 核心排序：仅调整【年份分组】的顺序（100%生效）
+  // 3. 核心排序功能（完全不变）
   // ======================================
   function renderGroups() {
-    // 清空容器
     container.innerHTML = '';
     
-    // 排序分组：最新优先 / 最早优先
     const sorted = isNewestFirst
       ? [...groups].sort((a, b) => b.year - a.year)
       : [...groups].sort((a, b) => a.year - b.year);
     
-    // 重新渲染分组（标题+文献一起移动）
     sorted.forEach(group => {
       container.appendChild(group.wrapper[0]);
       container.appendChild(group.wrapper[1]);
     });
     
-    // 更新按钮文字
+    // 中文按钮文字
     btn.textContent = isNewestFirst ? '最新优先 ↓' : '最早优先 ↑';
   }
 
-  // 绑定按钮点击
   btn.addEventListener('click', () => {
     isNewestFirst = !isNewestFirst;
     renderGroups();
   });
 
-  // 初始渲染
   renderGroups();
 });
 </script>
