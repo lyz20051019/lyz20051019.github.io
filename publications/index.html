@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isNewestFirst = true;
 
   // ======================================
-  // 1. Collect Year Groups
+  // 1. 收集所有年份分组
   // ======================================
   const groups = [];
   const yearHeadings = document.querySelectorAll('h2.bibliography');
@@ -23,22 +23,32 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ======================================
-  // 2. Generate Fixed Numbering
+  // 2. 统计总文献数，确定全局起始编号（最大号）
   // ======================================
-  let num = 1;
+  let totalPapers = 0;
   [...groups].sort((a, b) => a.year - b.year).forEach(group => {
-    group.wrapper[1].querySelectorAll('li').forEach(li => {
+    totalPapers += group.wrapper[1].querySelectorAll('li').length;
+  });
+
+  // ======================================
+  // 3. 分配编号：组内从上到下递减（顶部大，底部小）
+  // ======================================
+  let currentNum = totalPapers; // 从最大编号开始
+  [...groups].sort((a, b) => a.year - b.year).forEach(group => {
+    // 组内正序遍历（第一条→最后一条），编号依次减小
+    const papers = group.wrapper[1].querySelectorAll('li');
+    papers.forEach(li => {
       const col = li.querySelector('.col-sm-8');
       if (col) {
         col.querySelector('.bib-number')?.remove();
-        col.insertAdjacentHTML('afterbegin', `<span class="bib-number">${num}.</span>`);
-        num++;
+        col.insertAdjacentHTML('afterbegin', `<span class="bib-number">${currentNum}.</span>`);
+        currentNum--; // 编号递减
       }
     });
   });
 
   // ======================================
-  // 3. Core Sorting Function
+  // 4. 核心排序功能（不变）
   // ======================================
   function renderGroups() {
     container.innerHTML = '';
@@ -52,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
       container.appendChild(group.wrapper[1]);
     });
     
-    // English button text
     btn.textContent = isNewestFirst ? 'Newest First ↓' : 'Oldest First ↑';
   }
 
