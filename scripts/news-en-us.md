@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Congratulations to {en_name} for publishing the paper {title} in {journal}!
-date: {fetch_time}
+date: {time}
 inline: false
 related_posts: false
 ---

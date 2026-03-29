@@ -18,20 +18,25 @@ def clean_html_tags(text: str) -> str:
         return ""
     return re.sub(r'<[^>]+>', '', text).strip()
 
-# 拼接发布时间
+# 🔥 修正版：拼接发布时间，不满足标准格式则自动补齐为 01月01日0点
 def format_publish_time(year: str, month: str, date: str) -> str:
     try:
-        y = int(year.strip()) if year.strip() else 0
-        m = int(month.strip()) if month.strip() else 0
-        d = int(date.strip()) if date.strip() else 0
+        # 清洗并转换数字，异常则赋值为0
+        y = int(year.strip()) if year and year.strip().isdigit() else 0
+        m = int(month.strip()) if month and month.strip().isdigit() else 0
+        d = int(date.strip()) if date and date.strip().isdigit() else 0
+
+        # 合法性校验：年份>0，月份1-12，日期1-31
+        valid_year = y if 1900 <= y <= 2100 else 2000
+        valid_month = m if 1 <= m <= 12 else 1
+        valid_day = d if 1 <= d <= 31 else 1
+
+        # 强制生成标准格式：YYYY-MM-DD HH:MM:SS
+        return f"{valid_year:04d}-{valid_month:02d}-{valid_day:02d} 00:00:00"
+
     except:
-        return ""
-    
-    time_parts = []
-    if y > 0: time_parts.append(f"{y:04d}")
-    if m > 0: time_parts.append(f"{m:02d}")
-    if d > 0: time_parts.append(f"{d:02d}")
-    return "-".join(time_parts)
+        # 发生任何异常，直接返回默认标准时间
+        return "2000-01-01 00:00:00"
 
 # DOI安全文件名
 def get_safe_filename(doi: str) -> str:
@@ -80,7 +85,7 @@ def render_and_save(paper: Dict, template: str, output_dir: str, lang: str):
 
     # 1. 替换所有变量（严格匹配模板）
     content = template
-    content = content.replace("{time}", format_publish_time(paper.get("year","0"), paper.get("month","0"), paper.get("date","0")))
+    content = content.replace("{time}", format_publish_time(paper.get("year",""), paper.get("month",""), paper.get("date","")))
     # 替换全部占位符
     for key, value in paper.items():
         content = content.replace(f"{{{key}}}", str(value))
