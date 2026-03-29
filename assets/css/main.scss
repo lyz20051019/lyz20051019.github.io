@@ -57,12 +57,9 @@ ol.bibliography .title {
   margin: 0;
 }
 
-// 年份分组样式
-.year-group {
-  margin-bottom: 2rem;
-}
-.year-group h4 {
-  margin: 1.5rem 0 1rem;
+// 年份分组样式（适配网页实际h2标题）
+h2.bibliography {
+  margin: 2rem 0 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #eee;
 }
