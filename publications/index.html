@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isNewestFirst = true;
 
   // ======================================
-  // 1. 收集所有年份分组
+  // 1. 收集年份分组
   // ======================================
   const groups = [];
   const yearHeadings = document.querySelectorAll('h2.bibliography');
@@ -23,32 +23,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ======================================
-  // 2. 统计总文献数，确定全局起始编号（最大号）
+  // 2. 全局编号：严格 2017→2026 递增（核心原则不动）
   // ======================================
-  let totalPapers = 0;
+  let num = 1;
   [...groups].sort((a, b) => a.year - b.year).forEach(group => {
-    totalPapers += group.wrapper[1].querySelectorAll('li').length;
-  });
-
-  // ======================================
-  // 3. 分配编号：组内从上到下递减（顶部大，底部小）
-  // ======================================
-  let currentNum = totalPapers; // 从最大编号开始
-  [...groups].sort((a, b) => a.year - b.year).forEach(group => {
-    // 组内正序遍历（第一条→最后一条），编号依次减小
-    const papers = group.wrapper[1].querySelectorAll('li');
-    papers.forEach(li => {
+    // 正常分配全局编号（年份越早编号越小）
+    group.wrapper[1].querySelectorAll('li').forEach(li => {
       const col = li.querySelector('.col-sm-8');
       if (col) {
         col.querySelector('.bib-number')?.remove();
-        col.insertAdjacentHTML('afterbegin', `<span class="bib-number">${currentNum}.</span>`);
-        currentNum--; // 编号递减
+        col.insertAdjacentHTML('afterbegin', `<span class="bib-number">${num}.</span>`);
+        num++;
       }
     });
+
+    // 🔥 唯一修改：组内文献DOM反转显示（仅视觉改变，编号完全不变）
+    const lis = group.wrapper[1].querySelectorAll('li');
+    lis.forEach(li => group.wrapper[1].prepend(li));
   });
 
   // ======================================
-  // 4. 核心排序功能（不变）
+  // 3. 核心排序功能（完全不变）
   // ======================================
   function renderGroups() {
     container.innerHTML = '';
