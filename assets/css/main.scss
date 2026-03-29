@@ -25,12 +25,37 @@ $max-content-width: {{ site.max_width }};
   "flag-icons/flag-icons"
 ;
 
-// 显示出版物序号
+// 调整参考文献序号位置：期刊缩写 → 序号 → 标题
 .bibliography {
-  list-style: decimal !important;
-  padding-left: 2rem !important;
+  list-style: none; /* 隐藏原生有序列表的序号 */
+  counter-reset: bib-counter; /* 初始化计数器 */
+  padding-left: 0; /* 清除默认缩进 */
 }
+
 .bibliography li {
-  display: list-item !important;
-  margin-bottom: 1rem;
+  counter-increment: bib-counter; /* 每条论文自动递增序号 */
+  display: flex; /* 用弹性布局控制元素顺序 */
+  align-items: flex-start; /* 所有元素顶部对齐 */
+  gap: 0.6rem; /* 元素之间的间距 */
+  margin-bottom: 1.2rem; /* 论文条目之间的间距 */
+}
+
+/* 序号：放在期刊缩写之后、标题之前 */
+.bibliography li::before {
+  content: counter(bib-counter) ". "; /* 生成 1. 2. 3. ... */
+  order: 2; /* 元素顺序：1=期刊badge → 2=序号 → 3=标题 */
+  font-weight: 500;
+  min-width: 1.8rem; /* 固定宽度，避免序号跳动 */
+}
+
+/* 期刊缩写badge：第一个显示 */
+.bibliography .badge {
+  order: 1;
+  flex-shrink: 0; /* 防止badge被压缩变形 */
+}
+
+/* 论文标题：第三个显示 */
+.bibliography .title {
+  order: 3;
+  flex-grow: 1; /* 标题占满剩余宽度 */
 }
