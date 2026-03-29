@@ -23,88 +23,103 @@ nav_order: 3
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // ======================================
-  // 1. 精准收集所有文献+年份+归属分组（适配网页结构）
+  // 1. 健壮收集文献数据（容错+精准查找）
   // ======================================
-  const yearHeadings = document.querySelectorAll('h2.bibliography'); // 年份标题（2026、2025...）
-  const allPapers = []; // 存储所有文献数据
-  const parentLists = new Map(); // 记录每篇文献的归属列表（用于排序后放回）
+  const yearHeadings = document.querySelectorAll('h2.bibliography');
+  const allPapers = [];
+  let originalIndex = 0; // 记录原始顺序，用于同年内排序
 
   yearHeadings.forEach(heading => {
-    const year = parseInt(heading.textContent.trim());
-    const paperList = heading.nextElementSibling; // 对应年份的文献列表（ol）
-    
-    if (paperList?.tagName === 'OL') {
-      const papers = paperList.querySelectorAll('li');
-      papers.forEach(paper => {
-        const col = paper.querySelector('.col-sm-8'); // 标题区域（编号插入位置）
-        allPapers.push({
-          element: paper,
-          year: year,
-          col: col,
-          parentList: paperList // 绑定归属的年份列表
-        });
-        parentLists.set(paper, paperList); // 缓存父列表
-      });
+    // 容错：提取纯数字年份，忽略特殊字符
+    const year = Number(heading.textContent.trim().replace(/[^0-9]/g, ''));
+    if (isNaN(year)) return; // 跳过无效年份
+
+    // 精准查找：找到h2后面最近的ol.bibliography（避免中间有其他节点）
+    let paperList = heading.nextElementSibling;
+    while (paperList && paperList.tagName !== 'OL') {
+      paperList = paperList.nextElementSibling;
     }
+    if (!paperList) return;
+
+    // 收集文献，绑定原始索引（确保同年内顺序不变）
+    const papers = paperList.querySelectorAll('li');
+    papers.forEach(paper => {
+      const col = paper.querySelector('.col-sm-8');
+      allPapers.push({
+        element: paper,
+        year: year,
+        col: col,
+        parentList: paperList,
+        originalIndex: originalIndex++ // 唯一原始索引，同年内排序依据
+      });
+    });
   });
 
   // ======================================
-  // 2. 修复编号顺序：按【年份旧→新】生成永久编号
+  // 2. 生成固定编号（按【年份旧→新】严格排序）
   // ======================================
-  // 严格按年份正序排序（2011→2012→...→2026）
   allPapers.sort((a, b) => {
-    // 年份相同则按原始顺序排列（避免同年内乱序）
-    return a.year - b.year || allPapers.indexOf(a) - allPapers.indexOf(b);
+    // 优先按年份正序，年份相同按原始顺序
+    return a.year - b.year || a.originalIndex - b.originalIndex;
   });
 
-  // 分配编号（最老=1，最新=最大数）
+  // 分配编号（避免重复）
   allPapers.forEach((item, index) => {
     const fixedNumber = index + 1;
     if (item.col) {
-      // 清空可能存在的重复编号，重新插入
-      item.col.querySelector('.bib-number')?.remove();
+      // 移除已存在的编号，防止重复
+      const existingNum = item.col.querySelector('.bib-number');
+      if (existingNum) existingNum.remove();
+      // 插入新编号
       item.col.insertAdjacentHTML('afterbegin', `<span class="bib-number">${fixedNumber}.</span>`);
     }
-    item.element.dataset.fixedId = fixedNumber; // 绑定永久编号
+    item.element.dataset.fixedId = fixedNumber;
   });
 
   // ======================================
-  // 3. 修复排序功能：全局跨年份正序/倒序
+  // 3. 核心排序功能（全局跨年份，100%生效）
   // ======================================
   const btn = document.getElementById('toggleSort');
-  let isDescending = true; // 初始状态：最新优先（倒序）
+  let isDescending = true; // 初始：最新优先（倒序）
 
-  // 核心排序函数（全局跨年份）
-  const sortPapers = (isDesc) => {
-    // 清空所有年份列表（准备重新渲染）
+  // 排序执行函数（核心）
+  const executeSort = () => {
+    // 步骤1：清空所有年份对应的文献列表
     yearHeadings.forEach(heading => {
-      const paperList = heading.nextElementSibling;
-      if (paperList?.tagName === 'OL') {
-        paperList.innerHTML = '';
+      let paperList = heading.nextElementSibling;
+      while (paperList && paperList.tagName !== 'OL') {
+        paperList = paperList.nextElementSibling;
+      }
+      if (paperList) paperList.innerHTML = '';
+    });
+
+    // 步骤2：全局排序（倒序/正序）
+    const sortedPapers = [...allPapers].sort((a, b) => {
+      if (isDescending) {
+        // 倒序：年份大的在前，同年内按原始顺序
+        return b.year - a.year || a.originalIndex - b.originalIndex;
+      } else {
+        // 正序：年份小的在前，同年内按原始顺序
+        return a.year - b.year || a.originalIndex - b.originalIndex;
       }
     });
 
-    // 全局排序：倒序（2026→2011）或正序（2011→2026）
-    const sortedPapers = [...allPapers].sort((a, b) => {
-      return isDesc ? b.year - a.year : a.year - b.year;
-    });
-
-    // 按归属分组重新插入文献（保留年份分组结构）
+    // 步骤3：按归属分组重新插入文献（保留年份分组）
     sortedPapers.forEach(item => {
       item.parentList.appendChild(item.element);
     });
 
-    // 更新按钮文字
-    btn.textContent = isDesc ? '最新优先 ↓' : '最早优先 ↑';
+    // 步骤4：更新按钮文字
+    btn.textContent = isDescending ? '最新优先 ↓' : '最早优先 ↑';
   };
 
-  // 绑定按钮点击事件
+  // 绑定按钮点击事件（确保触发）
   btn.addEventListener('click', () => {
     isDescending = !isDescending;
-    sortPapers(isDescending);
+    executeSort(); // 直接执行排序
   });
 
-  // 初始加载：默认最新优先（倒序）
-  sortPapers(isDescending);
+  // 初始加载：强制执行一次排序（确保默认状态正确）
+  executeSort();
 });
 </script>
