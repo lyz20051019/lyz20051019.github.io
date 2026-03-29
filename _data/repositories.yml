@@ -1,15 +1,13 @@
 github_users:
-  - torvalds
-  - alshedivat
+  - HongGroup
 
 repo_description_lines_max: 2
 
 github_repos:
-  - george-gca/multi-language-al-folio
-  - alshedivat/al-folio
-  - jekyll/jekyll
-  - twbs/bootstrap
-  - jquery/jquery
-  - FortAwesome/Font-Awesome
-  - mathjax/MathJax
-  - jpswalsh/academicons
+  - HongGroup/NNdioxide-asymMichael
+  - HongGroup/qm9star_query
+  - HongGroup/SyntheticSpacePrediction
+  - HongGroup/HAT-ReactivityPredictor
+  - HongGroup/SPMS
+  - HongGroup/AHO
+  - HongGroup/ChemSelML
