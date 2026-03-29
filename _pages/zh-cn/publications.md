@@ -15,111 +15,78 @@ nav_order: 3
   <button id="toggleSort" class="btn btn-sm btn-primary">最新优先 ↓</button>
 </div>
 
-<!-- 文献容器 -->
+<!-- 文献容器（核心：包裹所有年份分组） -->
 <div class="publications">
   {% bibliography %}
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // ======================================
-  // 1. 健壮收集文献数据（容错+精准查找）
-  // ======================================
-  const yearHeadings = document.querySelectorAll('h2.bibliography');
-  const allPapers = [];
-  let originalIndex = 0; // 记录原始顺序，用于同年内排序
-
-  yearHeadings.forEach(heading => {
-    // 容错：提取纯数字年份，忽略特殊字符
-    const year = Number(heading.textContent.trim().replace(/[^0-9]/g, ''));
-    if (isNaN(year)) return; // 跳过无效年份
-
-    // 精准查找：找到h2后面最近的ol.bibliography（避免中间有其他节点）
-    let paperList = heading.nextElementSibling;
-    while (paperList && paperList.tagName !== 'OL') {
-      paperList = paperList.nextElementSibling;
-    }
-    if (!paperList) return;
-
-    // 收集文献，绑定原始索引（确保同年内顺序不变）
-    const papers = paperList.querySelectorAll('li');
-    papers.forEach(paper => {
-      const col = paper.querySelector('.col-sm-8');
-      allPapers.push({
-        element: paper,
-        year: year,
-        col: col,
-        parentList: paperList,
-        originalIndex: originalIndex++ // 唯一原始索引，同年内排序依据
-      });
-    });
-  });
-
-  // ======================================
-  // 2. 生成固定编号（按【年份旧→新】严格排序）
-  // ======================================
-  allPapers.sort((a, b) => {
-    // 优先按年份正序，年份相同按原始顺序
-    return a.year - b.year || a.originalIndex - b.originalIndex;
-  });
-
-  // 分配编号（避免重复）
-  allPapers.forEach((item, index) => {
-    const fixedNumber = index + 1;
-    if (item.col) {
-      // 移除已存在的编号，防止重复
-      const existingNum = item.col.querySelector('.bib-number');
-      if (existingNum) existingNum.remove();
-      // 插入新编号
-      item.col.insertAdjacentHTML('afterbegin', `<span class="bib-number">${fixedNumber}.</span>`);
-    }
-    item.element.dataset.fixedId = fixedNumber;
-  });
-
-  // ======================================
-  // 3. 核心排序功能（全局跨年份，100%生效）
-  // ======================================
+  const container = document.querySelector('.publications');
   const btn = document.getElementById('toggleSort');
-  let isDescending = true; // 初始：最新优先（倒序）
+  let isNewestFirst = true;
 
-  // 排序执行函数（核心）
-  const executeSort = () => {
-    // 步骤1：清空所有年份对应的文献列表
-    yearHeadings.forEach(heading => {
-      let paperList = heading.nextElementSibling;
-      while (paperList && paperList.tagName !== 'OL') {
-        paperList = paperList.nextElementSibling;
-      }
-      if (paperList) paperList.innerHTML = '';
-    });
-
-    // 步骤2：全局排序（倒序/正序）
-    const sortedPapers = [...allPapers].sort((a, b) => {
-      if (isDescending) {
-        // 倒序：年份大的在前，同年内按原始顺序
-        return b.year - a.year || a.originalIndex - b.originalIndex;
-      } else {
-        // 正序：年份小的在前，同年内按原始顺序
-        return a.year - b.year || a.originalIndex - b.originalIndex;
-      }
-    });
-
-    // 步骤3：按归属分组重新插入文献（保留年份分组）
-    sortedPapers.forEach(item => {
-      item.parentList.appendChild(item.element);
-    });
-
-    // 步骤4：更新按钮文字
-    btn.textContent = isDescending ? '最新优先 ↓' : '最早优先 ↑';
-  };
-
-  // 绑定按钮点击事件（确保触发）
-  btn.addEventListener('click', () => {
-    isDescending = !isDescending;
-    executeSort(); // 直接执行排序
+  // ======================================
+  // 1. 收集【年份分组】：每个分组 = 标题h2 + 文献列表ol
+  // ======================================
+  const groups = [];
+  const yearHeadings = document.querySelectorAll('h2.bibliography');
+  
+  yearHeadings.forEach(heading => {
+    const list = heading.nextElementSibling;
+    if (list && list.tagName === 'OL') {
+      groups.push({
+        wrapper: [heading, list], // 年份完整分组（标题+文献）
+        year: parseInt(heading.textContent.replace(/\D/g, ''))
+      });
+    }
   });
 
-  // 初始加载：强制执行一次排序（确保默认状态正确）
-  executeSort();
+  // ======================================
+  // 2. 生成固定编号（永久不变，按最早→最新排序）
+  // ======================================
+  let num = 1;
+  // 按年份正序排序，分配固定编号
+  [...groups].sort((a, b) => a.year - b.year).forEach(group => {
+    group.wrapper[1].querySelectorAll('li').forEach(li => {
+      const col = li.querySelector('.col-sm-8');
+      if (col) {
+        col.querySelector('.bib-number')?.remove();
+        col.insertAdjacentHTML('afterbegin', `<span class="bib-number">${num}.</span>`);
+        num++;
+      }
+    });
+  });
+
+  // ======================================
+  // 3. 核心排序：仅调整【年份分组】的顺序（100%生效）
+  // ======================================
+  function renderGroups() {
+    // 清空容器
+    container.innerHTML = '';
+    
+    // 排序分组：最新优先 / 最早优先
+    const sorted = isNewestFirst
+      ? [...groups].sort((a, b) => b.year - a.year)
+      : [...groups].sort((a, b) => a.year - b.year);
+    
+    // 重新渲染分组（标题+文献一起移动）
+    sorted.forEach(group => {
+      container.appendChild(group.wrapper[0]);
+      container.appendChild(group.wrapper[1]);
+    });
+    
+    // 更新按钮文字
+    btn.textContent = isNewestFirst ? '最新优先 ↓' : '最早优先 ↑';
+  }
+
+  // 绑定按钮点击
+  btn.addEventListener('click', () => {
+    isNewestFirst = !isNewestFirst;
+    renderGroups();
+  });
+
+  // 初始渲染
+  renderGroups();
 });
 </script>
