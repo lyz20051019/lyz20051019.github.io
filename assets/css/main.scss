@@ -25,37 +25,48 @@ $max-content-width: {{ site.max_width }};
   "flag-icons/flag-icons"
 ;
 
-// 调整参考文献序号位置：期刊缩写 → 序号 → 标题
+// 重置文献列表，禁用原生分组计数器
 .bibliography {
-  list-style: none; /* 隐藏原生有序列表的序号 */
-  counter-reset: bib-counter; /* 初始化计数器 */
-  padding-left: 0; /* 清除默认缩进 */
+  list-style: none;
+  counter-reset: none; /* 核心：关闭分年计数 */
+  padding-left: 0;
 }
 
 .bibliography li {
-  counter-increment: bib-counter; /* 每条论文自动递增序号 */
-  display: flex; /* 用弹性布局控制元素顺序 */
-  align-items: flex-start; /* 所有元素顶部对齐 */
-  gap: 0.6rem; /* 元素之间的间距 */
-  margin-bottom: 1.2rem; /* 论文条目之间的间距 */
+  margin-bottom: 1.2rem;
 }
 
-/* 序号：放在期刊缩写之后、标题之前 */
-.bibliography li::before {
-  content: counter(bib-counter) ". "; /* 生成 1. 2. 3. ... */
-  order: 2; /* 元素顺序：1=期刊badge → 2=序号 → 3=标题 */
-  font-weight: 500;
-  min-width: 1.8rem; /* 固定宽度，避免序号跳动 */
+// 核心布局：让 badge、序号、标题在同一行
+.bibliography .row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem; /* 控制元素间距 */
 }
 
-/* 期刊缩写badge：第一个显示 */
-.bibliography .badge {
+// 期刊缩写 badge（第一个显示）
+.bibliography .abbr {
   order: 1;
-  flex-shrink: 0; /* 防止badge被压缩变形 */
+  flex-shrink: 0; /* 防止被压缩变形 */
 }
 
-/* 论文标题：第三个显示 */
-.bibliography .title {
+// 固定编号样式（第二个显示：在badge后、标题前）
+.bib-number {
+  order: 2;
+  font-weight: 500;
+  min-width: 1.8rem;
+  display: inline-block;
+  margin-top: 0.2rem; /* 和标题顶部对齐 */
+  flex-shrink: 0;
+}
+
+// 标题内容区域（第三个显示）
+.bibliography .col-sm-8 {
   order: 3;
-  flex-grow: 1; /* 标题占满剩余宽度 */
+  flex-grow: 1; /* 占满剩余宽度 */
+}
+
+// 标题同行显示
+.bibliography .title {
+  display: inline;
+  margin: 0;
 }
