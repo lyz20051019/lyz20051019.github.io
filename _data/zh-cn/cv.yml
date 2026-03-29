@@ -1,101 +1,53 @@
-- title: General Information
+- title: 基本信息
   type: map
   contents:
-    - name: Full Name
-      value: Hong Xin
-    - name: Date of Birth
-      value: 14th March 1879
-    - name: Languages
-      value: Chinese, English
+    - name: 全名
+      value: 洪鑫
+    - name: 出生日期
+      value: 
+    - name: 掌握语言
+      value: 
 
-- title: Education
+- title: 教育背景
   type: time_table
   contents:
-    - title: PhD
-      institution: University of California, Los Angeles, America
-      year: 1905
+    - title: 博士
+      institution: 加州大学洛杉矶分校，洛杉矶，加利福尼亚州，美国
+      year: 2010年09月 至 2014年06月
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Federal teaching diploma
-      institution: Eidgenössische Technische Hochschule, Zurich, Switzerland
-      year: 1900
-      description:
-        - Description 1.
-        - Description 2.
+        - 化学专业
 
-- title: Experience
+- title: 工作经历
   type: time_table
   contents:
-    - title: Professor of Theoretical Physics
-      institution: Institute for Advanced Study, Princeton University
-      year: 1933 - 1955
+    - title: 助理教授
+      institution: 浙江大学，杭州，浙江省，中国
+      year: 2016年06月 至今
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Visiting Professor
-      institution: California Institute of Technology, Pasadena, California, US
-      year: 1933
+        - 化学专业
+    - title: 博士后
+      institution: 斯坦福大学，斯坦福，加利福尼亚州，美国
+      year: 2015年06月 至 2016年06月
       description:
-        - Description 1.
-        - Description 2.
-
-    - title: Director
-      institution: Kaiser Wilhelm Institute for Physics, Berlin, Germany.
-      year: 1917-1933
-
-    - title: Professor of Theoretical Physics
-      institution: Karl-Ferdinand University, Prague, Czechoslovakia
-      year: 1911 - 1917
+        - 化学工程专业
+    - title: 博士后
+      institution: 加州大学洛杉矶分校，洛杉矶，加利福尼亚州，美国
+      year: 2014年06月 至 2015年06月
       description:
+        - 化学与生物化学专业
 
-    - title: Associate Professor of Theoretical Physics
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1909 - 1911
-
-- title: Open Source Projects
+- title: 开源项目
   type: time_table
-  contents:
-    - title: <a href="https://github.com/george-gca/multi-language-al-folio">multi-language-al-folio</a>
-      year: 2023-now
-      description: A fork of al-folio theme with support for multiple languages.
+  contents: []
 
-    - title: <a href="https://github.com/alshedivat/al-folio">al-folio</a>
-      year: 2015-now
-      description: A beautiful, simple, clean, and responsive Jekyll theme for academics.
-
-- title: Honors and Awards
+- title: 荣誉与奖项
   type: time_table
-  contents:
-    - year: 1921
-      items:
-        - Nobel Prize in Physics
-        - Matteucci Medal
-    - year: 2029
-      items:
-        - Max Planck Medal
+  contents: []
 
-- title: Academic Interests
+- title: 学术研究方向
   type: nested_list
-  contents:
-    - title: Topic 1.
-      items:
-        - Description 1.
-        - Description 2.
-    - title: Topic 2.
-      items:
-        - Description 1.
-        - Description 2.
+  contents: []
 
-- title: Other Interests
+- title: 其他兴趣
   type: list
-  contents:
-    - <u>Hobbies:</u> Hobby 1, Hobby 2, etc.
+  contents: []
