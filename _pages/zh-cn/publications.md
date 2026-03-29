@@ -7,48 +7,80 @@ description: publications by categories in reversed chronological order. generat
 nav: true
 nav_order: 3
 ---
-<!-- _pages/publications.md -->
 
 {% include bib_search.liquid %}
 
+<!-- 排序按钮 -->
+<div style="margin:0 0 1.5rem; text-align:right;">
+  <button id="toggleSort" class="btn btn-sm btn-primary">最新优先 ↓</button>
+</div>
+
+<!-- 文献容器 -->
 <div class="publications">
   {% bibliography %}
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // 1. 收集所有年份分组和文献条目
-  const yearGroups = document.querySelectorAll('.year-group');
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. 获取所有年份分组 + 文献
+  const groups = document.querySelectorAll('.year-group');
   const allPapers = [];
 
-  yearGroups.forEach(group => {
-    // 从年份分组的h4提取年份
+  // 收集所有文献 + 对应年份
+  groups.forEach(group => {
     const yearText = group.querySelector('h4').textContent.trim();
     const year = parseInt(yearText);
-    // 提取该年份下的所有文献
-    const papers = group.querySelectorAll('.bibliography li');
-    papers.forEach(li => {
+    const papers = group.querySelectorAll('ol.bibliography > li');
+    
+    papers.forEach(paper => {
       allPapers.push({
-        element: li,
+        element: paper,
         year: year,
-        row: li.querySelector('.row'), // 找到flex容器
-        colSm8: li.querySelector('.col-sm-8') // 找到标题区域
+        col: paper.querySelector('.col-sm-8') // 精准定位标题区域
       });
     });
   });
 
-  // 2. 核心：按年份【旧→新】排序，生成全局固定编号
+  // ======================================
+  // 🔴 核心：按【年份旧 → 新】排序
+  // ======================================
   allPapers.sort((a, b) => a.year - b.year);
+
+  // ======================================
+  // 🔴 编号插入：仅放在标题前（col-sm-8内）
+  // ======================================
   allPapers.forEach((item, index) => {
-    const fixedNumber = index + 1; // 最老文献=1，最新文献=最大编号
-    // 创建编号元素
-    const numSpan = document.createElement('span');
-    numSpan.className = 'bib-number';
-    numSpan.textContent = fixedNumber + '. ';
-    // 插入到.row中：在badge之后、标题之前（精准位置）
-    item.row.insertBefore(numSpan, item.colSm8);
-    // 绑定编号到元素（后续可用于排序按钮）
-    item.element.dataset.fixedNum = fixedNumber;
+    const fixedNumber = index + 1; // 旧文献=1，最新文献=最大编号
+    if (item.col) {
+      // 插入编号到标题前方（正确位置）
+      item.col.insertAdjacentHTML('afterbegin', `<span class="bib-number">${fixedNumber}.</span>`);
+    }
+    // 绑定固定编号
+    item.element.dataset.fixedId = fixedNumber;
+  });
+
+  // ======================================
+  // 排序按钮（正常切换，编号不变）
+  // ======================================
+  const btn = document.getElementById('toggleSort');
+  let isNewestFirst = true;
+
+  btn.addEventListener('click', () => {
+    isNewestFirst = !isNewestFirst;
+    btn.textContent = isNewestFirst ? '最新优先 ↓' : '最早优先 ↑';
+
+    // 每个年份分组内切换顺序
+    groups.forEach(group => {
+      const list = group.querySelector('ol.bibliography');
+      const items = Array.from(list.querySelectorAll('li'));
+      
+      const sortedItems = isNewestFirst 
+        ? items.reverse() 
+        : items.sort((a, b) => a.dataset.fixedId - b.dataset.fixedId);
+
+      list.innerHTML = '';
+      sortedItems.forEach(el => list.appendChild(el));
+    });
   });
 });
 </script>
