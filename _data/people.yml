@@ -61,6 +61,24 @@ current_members:
   en_research_interests: Theoretical Study on Acid-Catalyzed Asymmetric Transformation of Acrylamides
   email: chemlgliu@stu.xmu.edu.cn
   category: current_team_members
+- id: tangmiaojiong
+  name: 汤缪炅
+  en_name: Miao-Jiong Tang
+  position: 博士研究生
+  en_position: PhD Student
+  research_interests: 机器学习
+  en_research_interests: Machine Learning
+  email: mj_t@zju.edu.cn
+  category: current_team_members
+- id: zhudexin
+  name: 朱德鑫
+  en_name: De-Xin Zhu
+  position: 博士研究生
+  en_position: PhD Student
+  research_interests: 机器学习
+  en_research_interests: Machine Learning
+  email: 12537054@zju.edu.cn
+  category: current_team_members
 past_members:
 - id: wangwu
   name: 王五
