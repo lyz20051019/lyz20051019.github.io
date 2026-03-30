@@ -25,6 +25,33 @@ current_members:
   en_research_interests: Machine Learning
   email: shuangyu@zju.edu.cn
   category: current_team_members
+- id: qgl
+  name: 钱甘露
+  en_name: Gan-Lu Qian
+  position: 博士研究生
+  en_position: PhD Student
+  research_interests: 不对称催化
+  en_research_interests: asymmetric catalysis
+  email: qgl@zju.edu.cn
+  category: current_team_members
+- id: rkwu
+  name: 吴镕凯
+  en_name: Rong-Kai Wu
+  position: 博士研究生
+  en_position: PhD Student
+  research_interests: 有机机理计算
+  en_research_interests: Organic mechanism calculation
+  email: rk_wu@zju.edu.cn
+  category: current_team_members
+- id: zhangshuoqing
+  name: 张硕卿
+  en_name: Shuo-Qing Zhang
+  position: 助理研究员
+  en_position: Assistant Researcher
+  research_interests: AI4Chem and PhysOrg
+  en_research_interests: AI4Chem and PhysOrg
+  email: angellasty@zju.edu.cn
+  category: current_team_members
 past_members:
 - id: wangwu
   name: 王五
