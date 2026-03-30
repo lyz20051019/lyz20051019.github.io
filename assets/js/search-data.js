@@ -277,6 +277,496 @@ ninja.data = [{
           description: "",
           section: "News",handler: () => {
               window.location.href = "/news/en-us/10.1002_anie.202518560.html";
+            },},{id: "news-congratulations-to-yu-chang-for-publishing-the-paper-sadphos-library-a-comprehensive-resource-for-exploring-chiral-ligand-chemical-space-in-chemistry-an-asian-journal",
+          title: 'Congratulations to Yu Chang for publishing the paper SadPhos Library: A Comprehensive Resource...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_asia.202500023.html";
+            },},{id: "news-congratulations-to-qian-gan-lu-for-publishing-the-paper-stepwise-controllable-catalytic-asymmetric-atherton-todd-reaction-to-access-diverse-p-v-stereogenic-compounds-in-nature-chemistry",
+          title: 'Congratulations to Qian Gan-Lu for publishing the paper Stepwise-controllable catalytic asymmetric Atherton–Todd reaction...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41557-025-02025-1.html";
+            },},{id: "news-congratulations-to-qian-gan-lu-for-publishing-the-paper-unifying-dearomatization-and-rearomatization-via-stereoselective-chlorination-dechlorination-resolution-of-axially-chiral-1-aryl-2-naphthols-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Qian Gan-Lu for publishing the paper Unifying Dearomatization and Rearomatization via...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.5c15900.html";
+            },},{id: "news-congratulations-to-qian-gan-lu-for-publishing-the-paper-highly-regio-and-enantioselective-synthesis-of-4-substituted-dihydroisoquinolones-catalyzed-by-a-planar-chiral-rhodium-iii-catalyst-bearing-a-penta-substituted-prochiral-cyclopentadienyl-ligand-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Qian Gan-Lu for publishing the paper Highly Regio- and Enantioselective Synthesis...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.5c16993.html";
+            },},{id: "news-congratulations-to-qian-gan-lu-for-publishing-the-paper-mechanism-and-origins-of-weak-bonding-controlled-selectivities-in-cinchoninium-catalyzed-umpolung-michael-addition-of-imines-in-ccs-chemistry",
+          title: 'Congratulations to Qian Gan-Lu for publishing the paper Mechanism and Origins of Weak...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.31635_ccschem.024.202404401.html";
+            },},{id: "news-congratulations-to-qian-gan-lu-for-publishing-the-paper-chiral-phosphoric-acid-catalyzed-kinetic-resolution-of-tertiary-alcohol-tethered-ynamides-via-controllable-hydroalkoxylation-in-acs-catalysis",
+          title: 'Congratulations to Qian Gan-Lu for publishing the paper Chiral Phosphoric Acid-Catalyzed Kinetic Resolution...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.4c08055.html";
+            },},{id: "news-congratulations-to-qian-gan-lu-for-publishing-the-paper-tandem-asymmetric-dearomatized-functionalization-reaction-of-phenols-with-evans-ynamides-enabled-by-divergent-electrophiles-in-science-china-chemistry",
+          title: 'Congratulations to Qian Gan-Lu for publishing the paper Tandem asymmetric dearomatized functionalization reaction...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1007_s11426-024-2211-y.html";
+            },},{id: "news-congratulations-to-qian-gan-lu-for-publishing-the-paper-enantioselective-desymmetrizing-hydroalkoxylation-of-1-4-and-1-8-diynes-enabled-by-chiral-brønsted-acid-catalysis-in-acs-catalysis",
+          title: 'Congratulations to Qian Gan-Lu for publishing the paper Enantioselective Desymmetrizing Hydroalkoxylation of 1,4-...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.3c01680.html";
+            },},{id: "news-congratulations-to-qian-gan-lu-for-publishing-the-paper-brønsted-acid-catalyzed-asymmetric-dearomatization-for-synthesis-of-chiral-fused-polycyclic-enone-and-indoline-scaffolds-in-science-advances",
+          title: 'Congratulations to Qian Gan-Lu for publishing the paper Brønsted acid–catalyzed asymmetric dearomatization for...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1126_sciadv.adg4648.html";
+            },},{id: "news-congratulations-to-qian-gan-lu-for-publishing-the-paper-syntheses-of-bufospirostenin-a-and-ophiopogonol-a-by-a-conformation-controlled-transannular-prins-cyclization-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Qian Gan-Lu for publishing the paper Syntheses of Bufospirostenin A and...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.2c07944.html";
+            },},{id: "news-congratulations-to-wu-rong-kai-for-publishing-the-paper-thermal-2-2-cycloaddition-as-a-route-to-gem-difluoro-heterobicyclo-n-1-1-alkanes-in-nature-chemistry",
+          title: 'Congratulations to Wu Rong-Kai for publishing the paper Thermal [2+2] cycloaddition as a...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41557-025-02047-9.html";
+            },},{id: "news-congratulations-to-wu-rong-kai-for-publishing-the-paper-metal-free-and-visible-light-mediated-method-enables-the-synthesis-of-olefins-from-ketones-in-green-synthesis-and-catalysis",
+          title: 'Congratulations to Wu Rong-Kai for publishing the paper Metal-free and visible-light-mediated method enables...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1016_j.gresc.2024.02.001.html";
+            },},{id: "news-congratulations-to-wu-rong-kai-for-publishing-the-paper-post-transition-state-bifurcation-controls-torsional-selectivity-in-radical-addition-of-allenes-in-chemistry-a-european-journal",
+          title: 'Congratulations to Wu Rong-Kai for publishing the paper Post‐Transition State Bifurcation Controls Torsional...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_chem.202403316.html";
+            },},{id: "news-congratulations-to-wu-rong-kai-and-zhang-shuo-qing-for-publishing-the-paper-benchmark-study-of-density-functional-theory-methods-in-geometry-optimization-of-transition-metal-dinitrogen-complexes-in-the-journal-of-physical-chemistry-a",
+          title: 'Congratulations to Wu Rong-Kai and Zhang Shuo-Qing for publishing the paper Benchmark Study...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.jpca.3c04215.html";
+            },},{id: "news-congratulations-to-wu-rong-kai-for-publishing-the-paper-visible-light-mediated-energy-transfer-enables-cyclopropanes-bearing-contiguous-all-carbon-quaternary-centers-in-acs-catalysis",
+          title: 'Congratulations to Wu Rong-Kai for publishing the paper Visible-Light-Mediated Energy Transfer Enables Cyclopropanes...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.3c02350.html";
+            },},{id: "news-congratulations-to-wu-rong-kai-and-zhang-shuo-qing-for-publishing-the-paper-direct-incorporation-of-dinitrogen-into-an-aliphatic-c-h-bond-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Wu Rong-Kai and Zhang Shuo-Qing for publishing the paper Direct Incorporation...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.2c13086.html";
+            },},{id: "news-congratulations-to-wu-rong-kai-for-publishing-the-paper-intermolecular-trans-bis-silylation-of-terminal-alkynes-in-nature-synthesis",
+          title: 'Congratulations to Wu Rong-Kai for publishing the paper Intermolecular trans-bis-silylation of terminal alkynes...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s44160-023-00325-3.html";
+            },},{id: "news-congratulations-to-wu-rong-kai-for-publishing-the-paper-multicomponent-double-mannich-alkylamination-involving-c-sp2-h-and-benzylic-c-sp3-h-bonds-in-nature-communications",
+          title: 'Congratulations to Wu Rong-Kai for publishing the paper Multicomponent double Mannich alkylamination involving...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41467-022-28088-z.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-larger-substituents-enhance-stereospecificity-in-1-1-diazene-nitrogen-extrusion-through-attenuation-of-dynamic-mismatching-in-jacs-au",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Larger Substituents Enhance Stereospecificity in...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacsau.5c01603.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-construction-of-all-aliphatic-stereocenters-via-enantioselective-alkene-hydroalkylation-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Construction of All-Aliphatic Stereocenters via...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.5c15430.html";
+            },},{id: "news-congratulations-to-liu-li-gao-and-zhang-shuo-qing-for-publishing-the-paper-transfer-learning-enabled-ligand-prediction-for-ni-catalyzed-atroposelective-suzuki-miyaura-cross-coupling-based-on-mechanistic-similarity-leveraging-pd-knowledge-for-ni-discovery-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Liu Li-Gao and Zhang Shuo-Qing for publishing the paper Transfer Learning-Enabled...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.5c00838.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-noninnocent-spectator-ligands-facilitate-co-ligand-stabilized-mn-i-metal-catalyzed-hydrogenation-of-urea-derivatives-or-carbamates-to-the-more-reactive-formamides-in-acs-catalysis",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Noninnocent Spectator Ligands Facilitate CO...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.5c01249.html";
+            },},{id: "news-congratulations-to-liu-li-gao-and-zhang-shuo-qing-for-publishing-the-paper-proximity-learning-enabled-ligand-prediction-for-ni-catalyzed-atroposelective-suzuki-miyaura-cross-coupling-leveraging-pd-catalysis-knowledge-for-ni-discovery-in-未知期刊",
+          title: 'Congratulations to Liu Li-Gao and Zhang Shuo-Qing for publishing the paper Proximity Learning-Enabled...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.26434_chemrxiv-2024-03v52-v2.html";
+            },},{id: "news-congratulations-to-liu-li-gao-and-zhang-shuo-qing-for-publishing-the-paper-data-driven-phosphine-ligand-design-of-ni-catalyzed-enantioselective-suzuki-miyaura-cross-coupling-reaction-for-the-synthesis-of-biaryl-atropisomers-standing-on-the-shoulder-of-pd-catalysis-giants-in-未知期刊",
+          title: 'Congratulations to Liu Li-Gao and Zhang Shuo-Qing for publishing the paper Data-Driven Phosphine...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.26434_chemrxiv-2024-03v52.html";
+            },},{id: "news-congratulations-to-liu-li-gao-and-zhang-shuo-qing-for-publishing-the-paper-recent-advances-in-theoretical-studies-on-cu-mediated-bond-formation-mechanisms-involving-radicals-in-acs-catalysis",
+          title: 'Congratulations to Liu Li-Gao and Zhang Shuo-Qing for publishing the paper Recent Advances...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.3c06042.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-an-asynchronous-concerted-mechanism-and-its-origin-in-lewis-acid-mediated-carbonyl-olefin-2-2-cycloaddition-in-chemistry-an-asian-journal",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper An Asynchronous Concerted Mechanism and...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_asia.202300375.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-reaction-performance-prediction-with-an-extrapolative-and-interpretable-graph-model-based-on-chemical-knowledge-in-nature-communications",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Reaction performance prediction with an...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41467-023-39283-x.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-data-driven-design-of-new-chiral-carboxylic-acid-for-construction-of-indoles-with-c-central-and-c-n-axial-chirality-via-cobalt-catalysis-in-nature-communications",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Data-driven design of new chiral...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41467-023-38872-0.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-enantioselectivity-prediction-of-pallada-electrocatalysed-c-h-activation-using-transition-state-knowledge-in-machine-learning-in-nature-synthesis",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Enantioselectivity prediction of pallada-electrocatalysed C–H...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s44160-022-00233-y.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-bridging-chemical-knowledge-and-machine-learning-for-performance-prediction-of-organic-synthesis-in-chemistry-a-european-journal",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Bridging Chemical Knowledge and Machine...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_chem.202202834.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-frontispiece-bridging-chemical-knowledge-and-machine-learning-for-performance-prediction-of-organic-synthesis-in-chemistry-a-european-journal",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Frontispiece: Bridging Chemical Knowledge and...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_chem.202380662.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-identification-of-alkoxy-radicals-as-hydrogen-atom-transfer-agents-in-ce-catalyzed-c-h-functionalization-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Identification of Alkoxy Radicals as...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.2c10126.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-unsymmetric-n-heterocyclic-carbene-ligand-enabled-nickel-catalysed-arylation-of-bulky-primary-and-secondary-amines-in-chemical-science",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Unsymmetric N-heterocyclic carbene ligand enabled...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_d3sc00492a.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-n-bu-4nbr-promoted-n2-splitting-to-molybdenum-nitride-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper (n-Bu)4NBr-Promoted N2 Splitting to Molybdenum...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.2c01507.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-nickel-catalyzed-domino-cross-electrophile-coupling-dicarbofunctionalization-reaction-to-afford-vinylcyclopropanes-in-acs-catalysis",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Nickel-Catalyzed Domino Cross-Electrophile Coupling Dicarbofunctionalization...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.1c04235.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-predicting-regioselectivity-in-radical-c-h-functionalization-of-heterocycles-through-machine-learning-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Predicting Regioselectivity in Radical C−H...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.202000959.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-mechanism-and-selectivity-control-in-ni-and-pd-catalyzed-cross-couplings-involving-carbon-oxygen-bond-activation-in-accounts-of-chemical-research",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Mechanism and Selectivity Control in...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.accounts.1c00050.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-catalytic-and-photochemical-strategies-to-stabilized-radicals-based-on-anomeric-nucleophiles-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Catalytic and Photochemical Strategies to...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.0c03298.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-computation-guided-development-of-the-click-ortho-quinone-methide-cycloaddition-with-improved-kinetics-in-organic-letters",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Computation-Guided Development of the “Click”...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.orglett.0c00578.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-diastereoselective-olefin-amidoacylation-via-photoredox-pcet-nickel-dual-catalysis-reaction-scope-and-mechanistic-insights-in-chemical-science",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Diastereoselective olefin amidoacylation via photoredox...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_d0sc01459a.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-carboxylate-breaks-the-arene-c-h-bond-via-a-hydrogen-atom-transfer-mechanism-in-electrochemical-cobalt-catalysis-in-chemical-science",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Carboxylate breaks the arene C–H...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_d0sc01898h.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-understanding-the-mechanism-and-reactivity-of-pd-catalyzed-c-p-bond-metathesis-of-aryl-phosphines-a-computational-study-in-organic-amp-amp-biomolecular-chemistry",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Understanding the mechanism and reactivity...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_d0ob00719f.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-how-solvents-control-the-stereospecificity-of-ni-catalyzed-miyaura-borylation-of-allylic-pivalates-in-acs-catalysis",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper How Solvents Control the Stereospecificity...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.9b02636.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-aluminum-catalyzed-selective-hydroboration-of-alkenes-and-alkynylsilanes-in-organic-process-research-amp-amp-development",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Aluminum-Catalyzed Selective Hydroboration of Alkenes...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.oprd.9b00205.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-rhodium-iii-catalyzed-asymmetric-borylative-cyclization-of-cyclohexadienone-containing-1-6-dienes-an-experimental-and-dft-study-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Rhodium(III)-Catalyzed Asymmetric Borylative Cyclization of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.9b05583.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-unexpected-stability-of-co-coordinated-palladacycle-in-bidentate-auxiliary-directed-c-sp3-h-bond-activation-a-combined-experimental-and-computational-study-in-organometallics",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Unexpected Stability of CO-Coordinated Palladacycle...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.organomet.9b00087.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-a-unified-explanation-for-chemoselectivity-and-stereospecificity-of-ni-catalyzed-kumada-and-cross-electrophile-coupling-reactions-of-benzylic-ethers-a-combined-computational-and-experimental-study-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper A Unified Explanation for Chemoselectivity...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.9b00097.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-c-h-acidity-and-arene-nucleophilicity-as-orthogonal-control-of-chemoselectivity-in-dual-c-h-bond-activation-in-organic-letters",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper C–H Acidity and Arene Nucleophilicity...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.orglett.9b00633.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-nucleophile-dependent-z-e-and-regioselectivity-in-the-palladium-catalyzed-asymmetric-allylic-c-h-alkylation-of-1-4-dienes-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Nucleophile-Dependent Z/E- and Regioselectivity in...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.8b13582.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-engineered-cytochrome-c-catalyzed-lactone-carbene-b-h-insertion-in-synlett",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Engineered Cytochrome c-Catalyzed Lactone-Carbene B–H...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1055_s-0037-1611662.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-tuning-the-lumo-energy-of-an-organic-interphase-to-stabilize-lithium-metal-batteries-in-acs-energy-letters",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Tuning the LUMO Energy of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acsenergylett.8b02483.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-computational-studies-on-ni-catalyzed-amide-c-n-bond-activation-in-chemical-communications",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Computational studies on Ni-catalyzed amide...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c9cc05763c.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-divergent-pathway-and-reactivity-control-of-intramolecular-arene-c-h-vinylation-by-vinyl-cations-in-organic-amp-amp-biomolecular-chemistry",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Divergent pathway and reactivity control...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c9ob01916b.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-enantioselective-intramolecular-desymmetric-α-addition-of-cyclohexanone-to-propiolamide-catalyzed-by-sodium-l-prolinate-in-chinese-journal-of-chemistry",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Enantioselective Intramolecular Desymmetric α-Addition of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_cjoc.201800420.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-stereoretentive-c-sp3-s-cross-coupling-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Stereoretentive C(sp3)–S Cross-Coupling in Journal...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.8b11211.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-stepwise-versus-concerted-reductive-elimination-mechanisms-in-the-carbon-iodide-bond-formation-of-dpephos-rhmei2-complex-in-organometallics",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Stepwise versus Concerted Reductive Elimination...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.organomet.8b00723.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-alternate-heme-ligation-steers-activity-and-selectivity-in-engineered-cytochrome-p450-catalyzed-carbene-transfer-reactions-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Alternate Heme Ligation Steers Activity...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.8b09613.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-n-heterocyclic-carbene-cu-catalyzed-enantioselective-allenyl-conjugate-addition-in-organic-letters",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper N-Heterocyclic Carbene–Cu-Catalyzed Enantioselective Allenyl Conjugate...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.orglett.8b03029.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-palladium-catalyzed-selective-five-fold-cascade-arylation-of-the-12-vertex-monocarborane-anion-by-b-h-activation-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Palladium-Catalyzed Selective Five-Fold Cascade Arylation...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.8b07872.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-rhodium-catalyzed-asymmetric-addition-of-organoboronic-acids-to-aldimines-using-chiral-spiro-monophosphite-olefin-ligands-method-development-and-mechanistic-studies-in-the-journal-of-organic-chemistry",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Rhodium-Catalyzed Asymmetric Addition of Organoboronic...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.joc.8b01764.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-mechanism-and-origins-of-chemo-and-regioselectivities-of-pd-catalyzed-intermolecular-σ-bond-exchange-between-benzocyclobutenones-and-silacyclobutanes-a-computational-study-in-organometallics",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Mechanism and Origins of Chemo-...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.organomet.7b00903.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-catalytic-asymmetric-synthesis-of-chiral-trisubstituted-heteroaromatic-allenes-from-1-3-enynes-in-communications-chemistry",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Catalytic asymmetric synthesis of chiral...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s42004-018-0065-4.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-copper-catalyzed-enantioselective-hydroboration-of-1-1-disubstituted-alkenes-method-development-applications-and-mechanistic-studies-in-asian-journal-of-organic-chemistry",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Copper-Catalyzed Enantioselective Hydroboration of 1,1-Disubstituted...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_ajoc.201700503.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-copper-catalyzed-enantioselective-markovnikov-protoboration-of-α-olefins-enabled-by-a-buttressed-n-heterocyclic-carbene-ligand-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Copper-Catalyzed Enantioselective Markovnikov Protoboration of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.201711229.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-coulombic-enhanced-hetero-radical-pairing-interactions-in-nature-communications",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Coulombic-enhanced hetero radical pairing interactions...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41467-018-04335-0.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-rhodium-catalyzed-asymmetric-hydroboration-of-γ-δ-unsaturated-amide-derivatives-δ-borylated-amides-in-chemical-communications",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Rhodium-catalyzed asymmetric hydroboration of γ,δ-unsaturated...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c8cc01563e.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-mechanism-and-origins-of-ligand-controlled-stereoselectivity-of-ni-catalyzed-suzuki-miyaura-coupling-with-benzylic-esters-a-computational-study-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Mechanism and Origins of Ligand-controlled...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.7b04973.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-n-heterocyclic-carbene-cu-catalyzed-enantioselective-conjugate-additions-with-alkenylboronic-esters-as-nucleophiles-in-acs-catalysis",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper N-heterocyclic Carbene–Cu-Catalyzed Enantioselective Conjugate Additions...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.7b02132.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-palladium-catalyzed-c-sp3-h-arylation-of-lactic-acid-efficient-synthesis-of-chiral-small-beta-aryl-small-alpha-hydroxy-acids-in-organic-chemistry-frontiers",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Palladium-catalyzed C(sp3)-H arylation of lactic...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c5qo00319a.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-redox-activated-light-up-nanomicelle-for-precise-imaging-guided-cancer-therapy-and-real-time-pharmacokinetic-monitoring-in-acs-nano",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Redox-Activated Light-Up Nanomicelle for Precise...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acsnano.6b06688.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-stereoselective-alkoxycarbonylation-of-unactivated-c-sp3-h-bonds-with-alkyl-chloroformates-via-pd-ii-pd-iv-catalysis-in-nature-communications",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Stereoselective alkoxycarbonylation of unactivated C(sp3)–H...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_ncomms12901.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-synthesis-of-chiral-small-alpha-hydroxy-acids-via-palladium-catalyzed-c-sp3-h-alkylation-of-lactic-acid-in-chemical-communications",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Synthesis of chiral [small alpha]-hydroxy...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c5cc07879b.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-practical-synthesis-of-anti-β-hydroxy-α-amino-acids-by-pdii-catalyzed-sequential-c-sp3-h-functionalization-in-chemistry-a-european-journal",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Practical Synthesis of anti-β-Hydroxy-α-Amino Acids...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_chem.201405942.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-stereoselective-synthesis-of-chiral-β-fluoro-α-amino-acids-via-pd-ii-catalyzed-fluorination-of-unactivated-methylene-c-sp3-h-bonds-scope-and-mechanistic-studies-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Stereoselective Synthesis of Chiral β-Fluoro...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.5b03989.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-palladium-0-catalyzed-cyclopropanation-of-benzyl-bromides-via-c-sp3-h-bond-activation-in-chem-commun",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Palladium(0)-catalyzed cyclopropanation of benzyl bromides...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c3cc49231a.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-a-general-and-practical-palladium-catalyzed-monoarylation-of-small-beta-methyl-c-sp3-h-of-alanine-in-chem-commun",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper A general and practical palladium-catalyzed...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c4cc06652a.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-pd-ii-catalyzed-alkoxylation-of-unactivated-c-sp3-h-and-c-sp2-h-bonds-using-a-removable-directing-group-efficient-synthesis-of-alkyl-ethers-in-chemical-science",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Pd(ii)-catalyzed alkoxylation of unactivated C(sp3)-H...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c3sc51993g.html";
+            },},{id: "news-congratulations-to-zhang-shuo-qing-for-publishing-the-paper-pd-ii-catalyzed-alkylation-of-unactivated-c-sp3-h-bonds-efficient-synthesis-of-optically-active-unnatural-small-alpha-amino-acids-in-chemical-science",
+          title: 'Congratulations to Zhang Shuo-Qing for publishing the paper Pd(ii)-catalyzed alkylation of unactivated C(sp3)-H...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_c3sc51747k.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-copper-catalyzed-intermolecular-asymmetric-transformations-of-vinyl-cations-via-1-2-stevens-type-rearrangement-in-acs-catalysis",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Copper-Catalyzed Intermolecular Asymmetric Transformations of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscatal.5c07241.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-computational-study-on-a-copper-catalyzed-atroposelective-dehydro-diels-alder-reaction-of-ynamide-via-vinyl-cation-mechanistic-investigations-and-chiral-induction-model-in-chemistry-an-asian-journal",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Computational Study on a Copper‐Catalyzed...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_asia.70282.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-copper-catalyzed-asymmetric-cascade-diyne-cyclization-meinwald-rearrangement-in-chinese-chemical-letters",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Copper-catalyzed asymmetric cascade diyne cyclization/Meinwald...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1016_j.cclet.2025.110870.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-copper-catalyzed-asymmetric-2-2-2-cycloaddition-of-diynes-via-vinyl-cations-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Copper‐Catalyzed Asymmetric [2 + 2...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.202514641.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-copper-catalyzed-formal-4-1-annulation-of-diynes-with-isoxazoles-synthesis-of-pyrrolo-3-4-b-indoles-in-organic-letters",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Copper-Catalyzed Formal [4 + 1]...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.orglett.5c01406.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-divergent-and-enantioselective-synthesis-of-three-types-of-chiral-polycyclic-n-heterocycles-via-copper-catalyzed-dearomative-cyclization-in-acs-central-science",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Divergent and Enantioselective Synthesis of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acscentsci.5c00248.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-ligand-controlled-divergent-asymmetric-c-sp3-h-and-c-sp3-o-insertion-via-vinyl-cations-in-nature-communications",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Ligand-controlled divergent asymmetric C(sp3)−H and...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41467-025-59328-7.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-enantioselective-synthesis-of-axially-chiral-tetrasubstituted-alkenes-by-copper-catalyzed-c-sp2-h-functionalization-of-arenes-with-vinyl-cations-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Enantioselective Synthesis of Axially Chiral...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.202418254.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-asymmetric-büchner-reaction-and-arene-cyclopropanation-via-copper-catalyzed-controllable-cyclization-of-diynes-in-nature-communications",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Asymmetric Büchner reaction and arene...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41467-024-53605-7.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-formal-one-carbon-insertion-into-esters-via-copper-catalyzed-diyne-cyclization-1-2-acyl-shift-in-organic-chemistry-frontiers",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Formal one-carbon insertion into esters...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_d4qo01623h.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-copper-catalyzed-enantioselective-desymmetrizing-c-sp2-h-functionalization-of-azide-ynamides-via-α-imino-copper-carbenes-in-science-china-chemistry",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Copper-catalyzed enantioselective desymmetrizing C(sp2)--H functionalization...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1007_s11426-024-1990-y.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-enantioselective-functionalization-of-unactivated-c-sp3-h-bonds-through-copper-catalyzed-diyne-cyclization-by-kinetic-resolution-in-nature-communications",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Enantioselective functionalization of unactivated C(sp3)--H...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41467-024-46288-7.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-asymmetric-formal-c-c-bond-insertion-into-aldehydes-via-copper-catalyzed-diyne-cyclization-in-nature-communications",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Asymmetric formal C–C bond insertion...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1038_s41467-023-42805-2.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-construction-of-axially-chiral-arylpyrroles-via-atroposelective-diyne-cyclization-in-angewandte-chemie",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Construction of Axially Chiral Arylpyrroles...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_ange.202303670.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-organocatalytic-intramolecular-4-2-annulation-of-enals-with-ynamides-atroposelective-synthesis-of-axially-chiral-7-aryl-indolines-in-chemical-science",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Organocatalytic intramolecular (4 + 2)...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_d3sc01880f.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-mechanism-investigation-on-direct-conversion-of-methane-over-a-mononuclear-rh-zsm-5-catalyst-multiple-roles-of-co-in-the-journal-of-physical-chemistry-c",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Mechanism Investigation on Direct Conversion...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.jpcc.2c07627.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-copper-catalyzed-enantioselective-doyle-kirmse-reaction-of-azide-ynamides-via-α-imino-copper-carbenes-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Copper‐Catalyzed Enantioselective Doyle–Kirmse Reaction of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.202216923.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-transition-metal-free-hydrogenolysis-of-anilines-to-arenes-mediated-by-lithium-hydride-in-journal-of-the-american-chemical-society",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Transition Metal-Free Hydrogenolysis of Anilines...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_jacs.2c05586.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-copper-catalyzed-enantioselective-diyne-cyclization-via-c-sp2-o-bond-cleavage-in-chemical-science",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Copper-catalyzed enantioselective diyne cyclization via...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1039_d2sc06152j.html";
+            },},{id: "news-congratulations-to-liu-li-gao-for-publishing-the-paper-catalyst-dependent-stereospecific-3-3-sigmatropic-rearrangement-of-sulfoxide-ynamides-divergent-synthesis-of-chiral-medium-sized-n-s-heterocycles-in-angewandte-chemie-international-edition",
+          title: 'Congratulations to Liu Li-Gao for publishing the paper Catalyst‐Dependent Stereospecific [3,3]‐Sigmatropic Rearrangement of...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_anie.202204603.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",
