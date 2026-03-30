@@ -52,6 +52,15 @@ current_members:
   en_research_interests: AI4Chem and PhysOrg
   email: angellasty@zju.edu.cn
   category: current_team_members
+- id: liuligao
+  name: 刘立高
+  en_name: Li-Gao Liu
+  position: 博士研究生
+  en_position: PhD Student
+  research_interests: 酸催化炔酰胺不对称转化的理论研究
+  en_research_interests: Theoretical Study on Acid-Catalyzed Asymmetric Transformation of Acrylamides
+  email: chemlgliu@stu.xmu.edu.cn
+  category: current_team_members
 past_members:
 - id: wangwu
   name: 王五

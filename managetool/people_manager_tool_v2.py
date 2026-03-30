@@ -269,7 +269,7 @@ class PeopleManageGUI:
             text_widget = self.md_zh_text if lang == "zh-cn" else self.md_en_text
             md_content = text_widget.get(1.0, tk.END).strip()
             # 固定Front Matter格式
-            permalink = f"/zh-cn/people/{people_id}/" if lang == "zh-cn" else f"/people/{people_id}/"
+            permalink = f"/people/{people_id}/" if lang == "zh-cn" else f"/people/{people_id}/"
             front_matter = f"""---
 id: {people_id}
 layout: person_detail
