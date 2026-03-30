@@ -1,6 +1,6 @@
 ---
 id: zhangshuoqing
 layout: person_detail
-permalink: /zh-cn/people/zhangshuoqing/
+permalink: /people/zhangshuoqing/
 ---
 ZJU, 2007-
