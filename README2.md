@@ -1,7 +1,7 @@
 需要知道的文件修改：
 scripts下包含了自动化脚本
 
-团队主页通过team.liqud和person_detail.liquid实现更改，基本信息存放在people.md其他信息存放在_pages/[lang]/people对应文件夹下（包含头像描述）
+团队主页通过team.liqud和person_detail.liquid实现更改，基本信息存放在people.yml其他信息存放在_pages/[lang]/people对应文件夹下（头像在assets/img/people下，id.png）
 
 managetool下包含管理脚本（不一定能使用）
 
