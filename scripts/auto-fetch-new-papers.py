@@ -11,6 +11,7 @@ from typing import Optional, Dict, List, Tuple, Set
 BASE_DIR = os.getcwd()
 ORCID_CSV = os.path.join(BASE_DIR, "scripts", "orcids.csv")
 NEWS_CSV = os.path.join(BASE_DIR, "scripts", "news.csv")
+PAPERS_BIB = os.path.join(BASE_DIR, "_bibliography", "papers.bib")
 FILTER_DOI_PREFIX = ["10.21203", "10.31219", "10.3389"]
 TIMEOUT = 15
 REQUEST_DELAY = 0.5
@@ -19,6 +20,7 @@ REQUEST_DELAY = 0.5
 orcid_authors = {}
 paper_records: Dict[str, dict] = {}
 doi_author_map: Dict[str, Dict[str, Set[str]]] = {}
+papers_bib_dois: Set[str] = set()
 
 class Log:
     BLUE = "\033[94m"
@@ -76,6 +78,31 @@ def load_authors():
     except Exception as e:
         print(f"{Log.RED}❌ 读取作者失败：{str(e)}{Log.RESET}")
         return False
+
+# 加载 papers.bib 中的 DOI
+def load_papers_bib_dois():
+    global papers_bib_dois
+    if not os.path.exists(PAPERS_BIB):
+        print(f"{Log.YELLOW}ℹ️ 未找到 papers.bib 文件{Log.RESET}")
+        return
+
+    try:
+        with open(PAPERS_BIB, "r", encoding="utf-8") as f:
+            content = f.read()
+        
+        # 提取 html 字段中的 DOI
+        html_pattern = re.compile(r'html\s*=\s*\{([^}]+)\}', re.I)
+        doi_pattern = re.compile(r'https?://doi\.org/([0-9]+\.[0-9]+/[^/]+)', re.I)
+        
+        for html_match in html_pattern.findall(content):
+            doi_match = doi_pattern.search(html_match)
+            if doi_match:
+                doi = doi_match.group(1)
+                papers_bib_dois.add(doi)
+        
+        print(f"{Log.GREEN}✅ 加载 papers.bib 中的 DOI：{len(papers_bib_dois)} 个{Log.RESET}")
+    except Exception as e:
+        print(f"{Log.RED}❌ 读取 papers.bib 失败：{str(e)}{Log.RESET}")
 
 # 加载旧数据
 def load_existing_papers():
@@ -189,6 +216,11 @@ def crossref_meta(doi: str) -> dict:
 
 # 处理论文：旧记录缺数据就补齐，fetch_time不动
 def process_paper(orcid: str, title: str, doi: str):
+    # 检查 DOI 是否存在于 papers.bib 中
+    if doi not in papers_bib_dois:
+        print(f"{Log.YELLOW}🚫 过滤：DOI 不在 papers.bib 中{Log.RESET}")
+        return
+    
     key = f"{orcid}_{doi}"
     meta = crossref_meta(doi)
 
@@ -266,6 +298,7 @@ def main():
         return
 
     load_existing_papers()
+    load_papers_bib_dois()
 
     for orcid in orcid_authors:
         print(f"\n{Log.BLUE}──────── 处理：{orcid_authors[orcid]['name']}{Log.RESET}")

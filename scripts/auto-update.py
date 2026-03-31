@@ -270,9 +270,20 @@ def main():
             print(f"[{i}/{len(works)}] {title[:50]}...")
             meta = crossref_meta(doi)
             if meta:
-                entry = format_entry(meta, selected_dois)
-                if entry:
-                    all_bib_entries.append(entry)
+                # 检查作者是否包含 Xin Hong 或 Hong Xin
+                authors = meta.get('authors', [])
+                has_target_author = False
+                for author in authors:
+                    author_lower = author.lower()
+                    if 'xin hong' in author_lower or 'hong xin' in author_lower:
+                        has_target_author = True
+                        break
+                if has_target_author:
+                    entry = format_entry(meta, selected_dois)
+                    if entry:
+                        all_bib_entries.append(entry)
+                else:
+                    print(f"{Colors.YELLOW}🚫 过滤：作者中不包含 Xin Hong 或 Hong Xin{Colors.RESET}")
             time.sleep(REQUEST_DELAY)
 
     # 2. 真正的双重去重：完整DOI 或 标题重复才删
