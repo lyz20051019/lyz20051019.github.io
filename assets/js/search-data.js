@@ -577,6 +577,11 @@ ninja.data = [{
           description: "",
           section: "News",handler: () => {
               window.location.href = "/news/en-us/10.1002_anie.202518560.html";
+            },},{id: "news-congratulations-to-group-members-for-publishing-the-paper-computational-insights-into-enantioselectivity-differences-in-pseudoenantiomeric-cinchona-alkaloid-catalyzed-imine-umpolung-michael-additions-in-chemcatchem",
+          title: 'Congratulations to group members for publishing the paper Computational Insights Into Enantioselectivity Differences...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_cctc.70727.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",
