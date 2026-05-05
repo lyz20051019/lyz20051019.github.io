@@ -582,6 +582,11 @@ ninja.data = [{
           description: "",
           section: "动态",handler: () => {
               window.location.href = "/zh-cn/news/zh-cn/10.1002_cctc.70727.html";
+            },},{id: "news-祝贺课题组成员在-chemistry-a-european-journal-上发表了论文-transforming-molecular-synthesis-with-large-language-models",
+          title: '祝贺课题组成员在《Chemistry – A European Journal》上发表了论文《Transforming Molecular Synthesis With Large Language Models.》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1002_chem.71074.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",

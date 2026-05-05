@@ -582,6 +582,11 @@ ninja.data = [{
           description: "",
           section: "News",handler: () => {
               window.location.href = "/news/en-us/10.1002_cctc.70727.html";
+            },},{id: "news-congratulations-to-group-members-for-publishing-the-paper-transforming-molecular-synthesis-with-large-language-models-in-chemistry-a-european-journal",
+          title: 'Congratulations to group members for publishing the paper Transforming Molecular Synthesis With Large...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1002_chem.71074.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",
