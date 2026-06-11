@@ -587,6 +587,11 @@ ninja.data = [{
           description: "",
           section: "动态",handler: () => {
               window.location.href = "/zh-cn/news/zh-cn/10.1002_chem.71074.html";
+            },},{id: "news-祝贺课题组成员在-chemistry-a-european-journal-上发表了论文-asymmetric-desymmetrization-of-para-quinamines-via-3-2-cycloaddition-with-1-3-5-triazinanes",
+          title: '祝贺课题组成员在《Chemistry – A European Journal》上发表了论文《Asymmetric Desymmetrization of para‐Quinamines via (3+2) Cycloaddition With 1,3,5‐Triazinanes》！...',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1002_chem.71220.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",
