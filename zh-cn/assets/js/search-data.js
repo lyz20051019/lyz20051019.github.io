@@ -592,6 +592,16 @@ ninja.data = [{
           description: "",
           section: "动态",handler: () => {
               window.location.href = "/zh-cn/news/zh-cn/10.1002_chem.71220.html";
+            },},{id: "news-祝贺课题组成员在-molecules-上发表了论文-computational-thermodynamic-and-kinetic-analysis-of-meisenheimer-intermediate-formation-in-aromatic-nucleophilic-addition",
+          title: '祝贺课题组成员在《Molecules》上发表了论文《Computational Thermodynamic and Kinetic Analysis of Meisenheimer Intermediate Formation in Aromatic Nucleophilic Addition》！...',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.3390_molecules31173114.html";
+            },},{id: "news-祝贺课题组成员在-science-上发表了论文-stereoselective-polysubstituted-bicyclo-1-1-0-butane-synthesis-by-rh-catalyzed-kinetic-resolution",
+          title: '祝贺课题组成员在《Science》上发表了论文《Stereoselective polysubstituted bicyclo[1.1.0]butane synthesis by Rh-catalyzed kinetic resolution》！',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1126_science.aeh6251.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",

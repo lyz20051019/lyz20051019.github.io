@@ -592,6 +592,16 @@ ninja.data = [{
           description: "",
           section: "News",handler: () => {
               window.location.href = "/news/en-us/10.1002_chem.71220.html";
+            },},{id: "news-congratulations-to-group-members-for-publishing-the-paper-computational-thermodynamic-and-kinetic-analysis-of-meisenheimer-intermediate-formation-in-aromatic-nucleophilic-addition-in-molecules",
+          title: 'Congratulations to group members for publishing the paper Computational Thermodynamic and Kinetic Analysis...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.3390_molecules31173114.html";
+            },},{id: "news-congratulations-to-group-members-for-publishing-the-paper-stereoselective-polysubstituted-bicyclo-1-1-0-butane-synthesis-by-rh-catalyzed-kinetic-resolution-in-science",
+          title: 'Congratulations to group members for publishing the paper Stereoselective polysubstituted bicyclo[1.1.0]butane synthesis by...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1126_science.aeh6251.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",
