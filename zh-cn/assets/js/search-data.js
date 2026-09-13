@@ -602,6 +602,11 @@ ninja.data = [{
           description: "",
           section: "动态",handler: () => {
               window.location.href = "/zh-cn/news/zh-cn/10.1126_science.aeh6251.html";
+            },},{id: "news-祝贺课题组成员在-the-journal-of-organic-chemistry-上发表了论文-mechanism-and-stereocontrol-in-chiral-phosphoric-acid-catalyzed-ynamide-mediated-atroposelective-couplings-of-carboxylic-acids-with-amines-and-alcohols",
+          title: '祝贺课题组成员在《The Journal of Organic Chemistry》上发表了论文《Mechanism and Stereocontrol in Chiral Phosphoric Acid-Catalyzed Ynamide-Mediated Atroposelective...',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_acs.joc.6c01439.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",

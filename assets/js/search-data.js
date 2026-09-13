@@ -602,6 +602,11 @@ ninja.data = [{
           description: "",
           section: "News",handler: () => {
               window.location.href = "/news/en-us/10.1126_science.aeh6251.html";
+            },},{id: "news-congratulations-to-group-members-for-publishing-the-paper-mechanism-and-stereocontrol-in-chiral-phosphoric-acid-catalyzed-ynamide-mediated-atroposelective-couplings-of-carboxylic-acids-with-amines-and-alcohols-in-the-journal-of-organic-chemistry",
+          title: 'Congratulations to group members for publishing the paper Mechanism and Stereocontrol in Chiral...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.joc.6c01439.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",
