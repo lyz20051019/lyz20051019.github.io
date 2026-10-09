@@ -607,6 +607,11 @@ ninja.data = [{
           description: "",
           section: "News",handler: () => {
               window.location.href = "/news/en-us/10.1021_acs.joc.6c01439.html";
+            },},{id: "news-congratulations-to-group-members-for-publishing-the-paper-leveraging-the-synergy-between-mechanistic-insight-and-machine-learning-for-predictive-structure-performance-relationships-in-organic-synthesis-in-accounts-of-chemical-research",
+          title: 'Congratulations to group members for publishing the paper Leveraging the Synergy between Mechanistic...',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/en-us/10.1021_acs.accounts.6c00547.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",

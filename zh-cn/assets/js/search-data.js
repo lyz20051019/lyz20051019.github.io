@@ -607,6 +607,11 @@ ninja.data = [{
           description: "",
           section: "动态",handler: () => {
               window.location.href = "/zh-cn/news/zh-cn/10.1021_acs.joc.6c01439.html";
+            },},{id: "news-祝贺课题组成员在-accounts-of-chemical-research-上发表了论文-leveraging-the-synergy-between-mechanistic-insight-and-machine-learning-for-predictive-structure-performance-relationships-in-organic-synthesis",
+          title: '祝贺课题组成员在《Accounts of Chemical Research》上发表了论文《Leveraging the Synergy between Mechanistic Insight and Machine Learning for...',
+          description: "",
+          section: "动态",handler: () => {
+              window.location.href = "/zh-cn/news/zh-cn/10.1021_acs.accounts.6c00547.html";
             },},{id: "projects-project-7",
           title: 'project 7',
           description: "with background image",
